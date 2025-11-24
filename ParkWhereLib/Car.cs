@@ -1,6 +1,6 @@
 ﻿namespace ParkWhereLib
 {
-    public class Class1
+    public class Car
     {
 
     }
