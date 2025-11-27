@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ParkWhereLib;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace ParkWhereRest.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<List<Car>> GetAll()
+        public ActionResult<IEnumerable<Car>> GetAll()
         {
             return Ok(_repo.GetAllCars());
         }

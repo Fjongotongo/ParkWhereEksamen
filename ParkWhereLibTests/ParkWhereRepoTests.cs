@@ -76,5 +76,10 @@ namespace ParkWhereLib.Tests
             Assert.AreEqual("NEW123", car.LicensePlate);
         }
 
+        [TestMethod]
+        public void AddCarToParkingLotWhenEmptySpacesTest()
+        {
+        }
+
     }
 }
