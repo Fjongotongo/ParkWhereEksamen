@@ -8,39 +8,29 @@ namespace ParkWhereLib
 {
     public class ParkingLot
     {
-        private int _parkingSpaces;
-
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public int ParkingSpaces
-        {
-            get => _parkingSpaces;
+        public int ParkingSpaces { get; set; }
 
-            set
-            {
-                if (value <= 0) throw new ArgumentOutOfRangeException("Parking spaces must be greater than zero");
-                if (value > 75) throw new ArgumentOutOfRangeException("Parking spaces must be 75 or less");
-
-                _parkingSpaces = value;
-            }
-        }
+        public int CarsParked { get; set; }
 
         public ParkingLot() 
         {
          
         }
 
-        public ParkingLot(string name, int parkingSpaces)
+        public ParkingLot(string name, int parkingSpaces, int carsParked)
         {
             Name = name;
             ParkingSpaces = parkingSpaces;
+            CarsParked = carsParked;
         }
 
         public override string ToString()
         {
-            return $"Name {Name}, ParkingLots {ParkingSpaces}";
+            return $"Name {Name}, ParkingLots {ParkingSpaces}, CarsParked {CarsParked}";
         }
 
     }

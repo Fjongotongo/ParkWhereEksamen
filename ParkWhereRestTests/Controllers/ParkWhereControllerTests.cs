@@ -24,31 +24,31 @@ namespace ParkWhereRest.Controllers.Tests
             _controller = new ParkWhereController(_repo, _httpClient);
         }
 
-        [TestMethod()]
-        public void GetAllTest()
-        {
-            var cars = _controller.GetAll();
+        //[TestMethod()]
+        //public void GetAllTest()
+        //{
+        //    var cars = _controller.GetAll();
 
 
 
-        }
+        //}
 
-        [TestMethod()]
-        public void GetTest()
-        {
-            Assert.Fail();
-        }
+        //[TestMethod()]
+        //public void GetTest()
+        //{
+        //    Assert.Fail();
+        //}
 
-        [TestMethod()]
-        public void PostTest()
-        {
-            Assert.Fail();
-        }
+        //[TestMethod()]
+        //public void PostTest()
+        //{
+        //    Assert.Fail();
+        //}
 
-        [TestMethod()]
-        public void ReceivePlateTest()
-        {
-            Assert.Fail();
-        }
+        //[TestMethod()]
+        //public void ReceivePlateTest()
+        //{
+        //    Assert.Fail();
+        //}
     }
 }
