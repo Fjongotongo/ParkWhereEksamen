@@ -9,8 +9,10 @@ namespace ParkWhereLib
     public class ParkWhereRepo : IParkWhereRepo
     {
         private int _nextId = 1;
+        private int _nextParkingLotId = 1;
 
         private List<Car> _cars;
+        private List<ParkingLot> _parkingLots;
 
         public ParkWhereRepo()
         {
@@ -19,6 +21,11 @@ namespace ParkWhereLib
                 new Car {Id = _nextId++, LicensePlate = "ABC123", Entry = DateTime.Now.AddHours(-2), Exit = null, Brand = "BMW", FuelType = "Petrol", Model = "E39" },
                 new Car {Id = _nextId++, LicensePlate = "XYZ789", Entry = DateTime.Now.AddHours(-1), Exit = null, Brand = "Fiat", FuelType = "Petrol", Model = "Punto"  },
                 new Car {Id = _nextId++, LicensePlate = "LMN456", Entry = DateTime.Now.AddHours(-3), Exit = DateTime.Now.AddHours(-1), Brand = "Tesla", FuelType = "Electric", Model = "Y" }
+            };
+
+            _parkingLots = new List<ParkingLot>()
+            {
+                new ParkingLot { Id = _nextParkingLotId++, Name = "P-Syd", ParkingSpaces = 75 }
             };
         }
 
@@ -77,5 +84,9 @@ namespace ParkWhereLib
             return car;
         }
 
+        public int? AddCarToParkingLotWhenEmptySpaces(int carId, int parkingLotId)
+        {
+            return null;
+        }
     }
 }

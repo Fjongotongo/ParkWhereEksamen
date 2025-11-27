@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkWhereRest", "ParkWhereR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkWhereLibTests", "ParkWhereLibTests\ParkWhereLibTests.csproj", "{290D7F4A-9903-4A5C-99AD-14033C701FAB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkWhereRestTests", "ParkWhereRestTests\ParkWhereRestTests.csproj", "{F5762045-ECC4-4346-B111-71F5AB531A94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{290D7F4A-9903-4A5C-99AD-14033C701FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{290D7F4A-9903-4A5C-99AD-14033C701FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{290D7F4A-9903-4A5C-99AD-14033C701FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5762045-ECC4-4346-B111-71F5AB531A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5762045-ECC4-4346-B111-71F5AB531A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5762045-ECC4-4346-B111-71F5AB531A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5762045-ECC4-4346-B111-71F5AB531A94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
