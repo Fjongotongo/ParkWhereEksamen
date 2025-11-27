@@ -51,6 +51,14 @@ namespace ParkWhereLib.Tests
             Assert.IsNotNull(car);
             Assert.AreEqual(1, car.Id);
         }
+
+        [TestMethod]
+        public void GetCarById_NonExisting_ReturnsNull()
+        {
+            var car = repo.GetCarById(4);
+            Assert.IsNull(car);
+        }
+
         [TestMethod()]
         public void AddCar_ValidCar_AddsCar()
         {
