@@ -21,6 +21,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddSingleton<ParkWhereRepo>();
+builder.Services.AddSingleton<IParkWhereRepo, ParkWhereRepo>();
 
 var app = builder.Build();
 

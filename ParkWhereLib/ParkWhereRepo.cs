@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParkWhereLib
 {
-    public class ParkWhereRepo
+    public class ParkWhereRepo : IParkWhereRepo
     {
         private int _nextId = 1;
 
