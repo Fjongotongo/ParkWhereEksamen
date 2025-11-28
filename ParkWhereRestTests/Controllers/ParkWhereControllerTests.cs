@@ -21,7 +21,6 @@ namespace ParkWhereRest.Controllers.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            _controller = new ParkWhereController(_repo, _httpClient);
         }
 
         //[TestMethod()]

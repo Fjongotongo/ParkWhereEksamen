@@ -68,24 +68,11 @@ namespace ParkWhereRest.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.Plate))
                 return BadRequest("No plate received");
-            // Debug: Log the BaseAddress
-            Console.WriteLine($"HttpClient BaseAddress: {_httpClient.BaseAddress}");
-
 
             try
             {
-                using var client = new HttpClient();
-                client.BaseAddress = new System.Uri(MotorApiBase);
-                client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", MotorApiKey);
 
-                var response = await client.GetAsync($"vehicles?registration_number={dto.Plate}");
-                var json = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                    return StatusCode((int)response.StatusCode, json);
-
-                return Content(json, "application/json"); // forward JSON directly
-
-                // Now this works because BaseAddress is set
+                // Use the configured HttpClient directly
                 var response = await _httpClient.GetAsync($"vehicles?registration_number={dto.Plate}");
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -93,12 +80,14 @@ namespace ParkWhereRest.Controllers
                     return StatusCode((int)response.StatusCode, json);
 
                 return Content(json, "application/json");
-
             }
             catch (HttpRequestException ex)
             {
-                return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Error contacting Motor API: {ex.Message}");
+                return StatusCode(StatusCodes.Status503ServiceUnavailable,
+                    $"Error contacting Motor API: {ex.Message}");
             }
         }
+
     }
+}
 }
