@@ -40,15 +40,15 @@ namespace ParkWhereRest.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Car> Get(int id)
         {
-             Car? car = _repo.GetCarById(id);
-             if (car == null)
-             {
+            Car? car = _repo.GetCarById(id);
+            if (car == null)
+            {
                 return NotFound();
-             }
-             else
-             {
+            }
+            else
+            {
                 return Ok(car);
-             }
+            }
         }
 
         [HttpPost]
@@ -58,21 +58,36 @@ namespace ParkWhereRest.Controllers
             Car Car = _repo.AddCar(car);
             return Created("INSERT URL" + "/" + Car.Id, Car); //Mangler URL
         }
-        
+
+        // POST: api/parkwhere/plate
+
         [HttpPost("plate")]
         public async Task<IActionResult> ReceivePlate([FromBody] PlateDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Plate))
                 return BadRequest("No plate received");
+            // Debug: Log the BaseAddress
+            Console.WriteLine($"HttpClient BaseAddress: {_httpClient.BaseAddress}");
 
-            using var client = new HttpClient();
-            client.BaseAddress = new System.Uri(MotorApiBase);
-            client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", MotorApiKey);
-            
-            var response = await client.GetAsync($"vehicles?registration_number={dto.Plate}");
-            var json = await response.Content.ReadAsStringAsync();
 
-            return Content(json, "application/json"); // forward JSON directly
+            try
+            {
+
+                using var client = new HttpClient();
+                client.BaseAddress = new System.Uri(MotorApiBase);
+                client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", MotorApiKey);
+
+                var response = await client.GetAsync($"vehicles?registration_number={dto.Plate}");
+                var json = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                    return StatusCode((int)response.StatusCode, json);
+
+                return Content(json, "application/json"); // forward JSON directly
+            }
+            catch (HttpRequestException ex)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Error contacting Motor API: {ex.Message}");
+            }
         }
     }
 }
