@@ -38,11 +38,17 @@ namespace ParkWhereRest.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Car> Get(int id)
         {
-            var car = _repo.GetCarById(id);
-            if (car == null)
-                return NotFound();
 
-            return Ok(car);
+            Car? car = _repo.GetCarById(id);
+            if (car == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(car);
+            }
+
         }
 
         // POST: api/parkwhere
@@ -56,7 +62,7 @@ namespace ParkWhereRest.Controllers
         }
 
         // POST: api/parkwhere/plate
-        
+
         [HttpPost("plate")]
         public async Task<IActionResult> ReceivePlate([FromBody] PlateDto dto)
         {
@@ -68,6 +74,17 @@ namespace ParkWhereRest.Controllers
 
             try
             {
+                using var client = new HttpClient();
+                client.BaseAddress = new System.Uri(MotorApiBase);
+                client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", MotorApiKey);
+
+                var response = await client.GetAsync($"vehicles?registration_number={dto.Plate}");
+                var json = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                    return StatusCode((int)response.StatusCode, json);
+
+                return Content(json, "application/json"); // forward JSON directly
+
                 // Now this works because BaseAddress is set
                 var response = await _httpClient.GetAsync($"vehicles?registration_number={dto.Plate}");
                 var json = await response.Content.ReadAsStringAsync();
@@ -76,6 +93,7 @@ namespace ParkWhereRest.Controllers
                     return StatusCode((int)response.StatusCode, json);
 
                 return Content(json, "application/json");
+
             }
             catch (HttpRequestException ex)
             {
