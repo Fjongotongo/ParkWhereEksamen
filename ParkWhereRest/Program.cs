@@ -1,4 +1,5 @@
 using ParkWhereLib;
+using ParkWhereRest.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,17 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+
+
+builder.Services.AddHttpClient("MotorApi", client => // Changed to a named client, her navngiver vi clienten "MotorApi", de får informationen fra appsettings.json
+{
+    var motorApiConfig = builder.Configuration.GetSection("MotorApi");
+    client.BaseAddress = new Uri(motorApiConfig["BaseUrl"]!); 
+    client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", motorApiConfig["ApiKey"]);
+});
+
+
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

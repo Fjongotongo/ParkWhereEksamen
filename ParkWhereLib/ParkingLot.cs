@@ -12,22 +12,25 @@ namespace ParkWhereLib
 
         public string Name { get; set; }
 
-        public int ParkingLots { get; set; }
+        public int ParkingSpaces { get; set; }
+
+        public int CarsParked { get; set; }
 
         public ParkingLot() 
         {
          
         }
 
-        public ParkingLot(string name, int parkingLots)
+        public ParkingLot(string name, int parkingSpaces, int carsParked)
         {
             Name = name;
-            ParkingLots = parkingLots;
+            ParkingSpaces = parkingSpaces;
+            CarsParked = carsParked;
         }
 
         public override string ToString()
         {
-            return $"Name {Name}, ParkingLots {ParkingLots}";
+            return $"Name {Name}, ParkingLots {ParkingSpaces}, CarsParked {CarsParked}";
         }
 
     }

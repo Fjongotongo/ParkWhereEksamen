@@ -76,5 +76,47 @@ namespace ParkWhereLib.Tests
             Assert.AreEqual("NEW123", car.LicensePlate);
         }
 
+        [TestMethod]
+        public void CalculateParkingSpacesWhenCarIsDrivingIntoParkingLotTest()
+        {
+           
+            int expectedSpaces = 1;
+
+            int actualSpaces = repo.CalculateParkingSpacesWhenCarIsDrivingIntoParkingLot(1);
+
+            Assert.AreEqual(expectedSpaces, actualSpaces);
+        }
+
+        [TestMethod]
+        public void CalculateParkingSpacesWhenCarIsDrivingIntoParkingLot_ParkingLotIdNotExistTest()
+        {
+
+            int expectedSpaces = 0;
+
+            int actualSpaces = repo.CalculateParkingSpacesWhenCarIsDrivingIntoParkingLot(2);
+
+            Assert.AreEqual(expectedSpaces, actualSpaces);
+        }
+
+        [TestMethod]
+        public void CalculateParkingSpacesWhenCarIsDrivingOutOfParkingLotTest()
+        {
+            int expectedSpaces = 3;
+
+            int actualSpaces = repo.CalculateParkingSpacesWhenCarIsDrivingOutOfParkingLot(1);
+
+            Assert.AreEqual(expectedSpaces, actualSpaces);
+        }
+
+        [TestMethod]
+        public void CalculateParkingSpacesWhenCarIsDrivingOutOfParkingLot_ParkingIdNotExistTest()
+        {
+            int expectedSpaces = 0;
+
+            int actualSpaces = repo.CalculateParkingSpacesWhenCarIsDrivingOutOfParkingLot(2);
+
+            Assert.AreEqual(expectedSpaces, actualSpaces);
+        }
+
     }
 }
