@@ -71,7 +71,6 @@ namespace ParkWhereLib.Tests
             var newCar = new Car
             {
                 LicensePlate = "NEW123",
-                Entry = DateTime.Now,
                 Brand = "Audi",
                 FuelType = "Diesel",
                 Model = "A4"
