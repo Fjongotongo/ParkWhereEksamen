@@ -10,17 +10,27 @@ namespace ParkWhereLib
     public class CarRepo : ICarRepo
     {
         private int _nextId = 1;
-
+        private string existingLicensePlate;
         private List<Car> _cars;
 
         public CarRepo()
         {
             _cars = new List<Car>()
             {
-                new Car {Id = _nextId++, LicensePlate = "ABC123", Brand = "BMW", FuelType = "Petrol", Model = "E39" },
+                new Car {Id = _nextId++, LicensePlate = "AB12345", Brand = "BMW", FuelType = "Petrol", Model = "E39" },
                 new Car {Id = _nextId++, LicensePlate = "XYZ789", Brand = "Fiat", FuelType = "Petrol", Model = "Punto"  },
                 new Car {Id = _nextId++, LicensePlate = "LMN456", Brand = "Tesla", FuelType = "Electric", Model = "Y" }
             };
+        }
+
+        public Car GetByLicensePlate(string licensePlate)
+        {
+            return _cars.FirstOrDefault(c => c.LicensePlate != null && c.LicensePlate.Equals(licensePlate, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override string ToString()
+        {
+            return $"CarRepo with {_cars.Count} cars.";
         }
 
         public List<Car> GetAllCars(string? brand = null, string? fuelType = null, string? model = null, string? sortBy = null)
@@ -71,12 +81,22 @@ namespace ParkWhereLib
             return _cars.FirstOrDefault(c => c.Id == id);
         }
 
-        public Car AddCar(Car car)
+        public string AddCar(Car newCar)
         {
-            //skal laves om så den tjekker om den allerede eksistere og ikke adder igen hvis den findes
-            car.Id = _nextId++;
-            _cars.Add(car);
-            return car;
+
+
+            Car? existingCar = GetByLicensePlate(newCar.LicensePlate);
+
+            if (existingCar != null)  
+            {
+                return $"{newCar.LicensePlate} already exists.";
+            }
+
+            newCar.Id = _nextId++; 
+
+
+            _cars.Add(newCar);
+            return $"{newCar.LicensePlate} added successfully.";
         }
     }
 }

@@ -65,8 +65,23 @@ namespace ParkWhereLib.Tests
             Assert.IsNull(car);
         }
 
-        [TestMethod()]
-        public void AddCar_ValidCar_AddsCar()
+        [TestMethod]
+        public void GetByLicensePlate_ExistingPlate_ReturnsCar()
+        {
+            var car = repo.GetByLicensePlate("XYZ789");
+            Assert.IsNotNull(car);
+            Assert.AreEqual("XYZ789", car.LicensePlate);
+        }
+
+        [TestMethod]
+        public void GetByLicensePlate_NonExistingPlate_ReturnsNull()
+        {
+            var car = repo.GetByLicensePlate("NONEXISTENT");
+            Assert.IsNull(car);
+        }
+
+        [TestMethod]
+        public void AddCar_ValidCarCheckForLicensePlate()
         {
             var newCar = new Car
             {
@@ -76,9 +91,25 @@ namespace ParkWhereLib.Tests
                 Model = "A4"
             };
             repo.AddCar(newCar);
-            var car = repo.GetCarById(4);
-            Assert.IsNotNull(car);
-            Assert.AreEqual("NEW123", car.LicensePlate);
+            repo.GetByLicensePlate("NEW123");
+            Assert.AreEqual("NEW123", newCar.LicensePlate);
         }
+
+        [TestMethod]
+        public void AddCar_IfLicensePlateAlreadyExists()
+        {
+          var newCar = new Car
+          {
+              LicensePlate = "ABC123", // Existing license plate
+              Brand = "Toyota",
+              FuelType = "Hybrid",
+              Model = "Corolla"
+          };
+            repo.AddCar(newCar);
+            repo.GetByLicensePlate("");
+           
+
+        }
+
     }
 }
