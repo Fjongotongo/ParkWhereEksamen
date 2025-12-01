@@ -16,9 +16,12 @@ namespace ParkWhereLib
 
         public int CarsParked { get; set; }
 
+        public CarRepo CarRepo { get; set; }
+
+        private List<ParkingEvent> _events = new List<ParkingEvent>();
+
         public ParkingLot() 
         {
-         
         }
 
         public ParkingLot(string name, int parkingSpaces, int carsParked)
@@ -31,6 +34,21 @@ namespace ParkWhereLib
         public override string ToString()
         {
             return $"Name {Name}, ParkingLots {ParkingSpaces}, CarsParked {CarsParked}";
+        }
+
+        public List<ParkingEvent> GetAllParkingEvents()
+        {
+            return null;
+        }
+
+        public ParkingEvent? GetById(int id)
+        {
+            return null;
+        }
+
+        public ParkingEvent AddParkingEvent(ParkingEvent parkingEvent)
+        {
+            return null;
         }
 
     }
