@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ParkWhereLib.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ParkWhereLib
 {
-    public class CarRepo
+    public class CarRepo : ICarRepo
     {
         private int _nextId = 1;
 

@@ -3,6 +3,7 @@ using ParkWhereLib;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using ParkWhereLib.Interfaces;
 
 namespace ParkWhereRest.Controllers
 {
@@ -15,12 +16,12 @@ namespace ParkWhereRest.Controllers
             public string Plate { get; set; }
         }
 
-        private readonly IParkWhereRepo _repo;
+        private readonly ICarRepo _repo;
         private readonly HttpClient _httpClient;
 
-        public ParkWhereController(IParkWhereRepo repo, IHttpClientFactory httpClientFactory)
+        public ParkWhereController(ICarRepo carRepo, IHttpClientFactory httpClientFactory)
         {
-            _repo = repo;
+            _repo = carRepo;
             _httpClient = httpClientFactory.CreateClient("MotorApi"); //  Retrieve the named client
         }
 
@@ -89,5 +90,4 @@ namespace ParkWhereRest.Controllers
         }
 
     }
-}
 }

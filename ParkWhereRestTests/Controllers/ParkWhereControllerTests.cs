@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ParkWhereLib;
+using ParkWhereLib.Interfaces;
 using ParkWhereRest.Controllers;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ParkWhereRest.Controllers.Tests
     public class ParkWhereControllerTests
     {
         private ParkWhereController _controller;
-        private IParkWhereRepo _repo;
+        private ICarRepo _carRepo;
         private HttpClient _httpClient;
 
 

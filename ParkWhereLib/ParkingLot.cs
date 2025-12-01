@@ -8,6 +8,13 @@ namespace ParkWhereLib
 {
     public class ParkingLot
     {
+
+        private List<ParkingLot> _parkingLots;
+
+        private int _nextParkingLotId = 1;
+
+
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -20,8 +27,13 @@ namespace ParkWhereLib
 
         private List<ParkingEvent> _events = new List<ParkingEvent>();
 
+
         public ParkingLot() 
         {
+            _parkingLots = new List<ParkingLot>()
+            {
+                new ParkingLot { Id = _nextParkingLotId++, Name = "P-Syd", ParkingSpaces = 75, CarsParked = 73 }
+            };
         }
 
         public ParkingLot(string name, int parkingSpaces, int carsParked)
@@ -49,6 +61,32 @@ namespace ParkWhereLib
         public ParkingEvent AddParkingEvent(ParkingEvent parkingEvent)
         {
             return null;
+        }
+
+        public int CalculateParkingSpacesWhenCarIsDrivingIntoParkingLot(int parkingLotId)
+        {
+            ParkingLot? parkingToRemoveSpace = _parkingLots.FirstOrDefault(p => p.Id == parkingLotId);
+            int parkingSpacesLeft = 0;
+
+            if (parkingToRemoveSpace != null)
+            {
+                parkingToRemoveSpace.CarsParked += 1;
+                parkingSpacesLeft = parkingToRemoveSpace.ParkingSpaces - parkingToRemoveSpace.CarsParked;
+            }
+            return parkingSpacesLeft;
+        }
+
+        public int CalculateParkingSpacesWhenCarIsDrivingOutOfParkingLot(int parkingLotId)
+        {
+            ParkingLot? parkingToAddSpace = _parkingLots.FirstOrDefault(p => p.Id == parkingLotId);
+            int parkingSpacesLeft = 0;
+
+            if (parkingToAddSpace != null)
+            {
+                parkingToAddSpace.CarsParked -= 1;
+                parkingSpacesLeft = parkingToAddSpace.ParkingSpaces - parkingToAddSpace.CarsParked;
+            }
+            return parkingSpacesLeft;
         }
 
     }
