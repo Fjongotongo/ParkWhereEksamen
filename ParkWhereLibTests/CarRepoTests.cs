@@ -106,10 +106,44 @@ namespace ParkWhereLib.Tests
               Model = "Corolla"
           };
             repo.AddCar(newCar);
-            repo.GetByLicensePlate("");
+            repo.GetByLicensePlate("ABC123");
            
 
         }
+
+        [TestMethod]
+        public void AddCar_DuplicateLicensePlate_DoesNotAddCar()
+        {
+            // Arrange
+            var repo = new CarRepo();
+
+            var car1 = new Car
+            {
+                LicensePlate = "ABC123",
+                Brand = "BMW",
+                FuelType = "Petrol",
+                Model = "M3"
+            };
+
+            var car2 = new Car
+            {
+                LicensePlate = "ABC123",     // SAME plate
+                Brand = "Audi",
+                FuelType = "Diesel",
+                Model = "A4"
+            };
+
+            // Act
+            var firstAdd = repo.AddCar(car1);
+            var secondAdd = repo.AddCar(car2);
+
+            // Assert
+            Assert.AreEqual(firstAdd.Id, secondAdd.Id, "Should return existing car instead of adding a new one.");
+
+            var allCars = repo.GetAllCars();
+            Assert.AreEqual(4, allCars.Count, "Repo should still contain only one car.");
+        }
+
 
     }
 }

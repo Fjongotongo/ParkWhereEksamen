@@ -81,22 +81,20 @@ namespace ParkWhereLib
             return _cars.FirstOrDefault(c => c.Id == id);
         }
 
-        public string AddCar(Car newCar)
+        public Car AddCar(Car newCar)
         {
-
-
             Car? existingCar = GetByLicensePlate(newCar.LicensePlate);
 
-            if (existingCar != null)  
+            if (existingCar != null)
             {
-                return $"{newCar.LicensePlate} already exists.";
+                return existingCar; // Skal muligvis gøres så den opdaterer det vi har i repoet, med nyt info
             }
 
             newCar.Id = _nextId++; 
 
-
             _cars.Add(newCar);
-            return $"{newCar.LicensePlate} added successfully.";
+            return newCar;
         }
+
     }
 }
