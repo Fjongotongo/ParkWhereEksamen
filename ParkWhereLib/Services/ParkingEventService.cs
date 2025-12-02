@@ -12,6 +12,7 @@ namespace ParkWhereLib.Services
         private int _nextId = 1;
 
         private readonly ParkingLotService _lotService;
+        private CarRepo _carRepo;
 
         public ParkingEventService(ParkingLotService lotService)
         {
@@ -26,9 +27,8 @@ namespace ParkWhereLib.Services
                 Id = _nextId++
             };
 
-            
-
             _events.Add(parkingEvent);
+            _carRepo.AddCar(car);
 
             // Update lot status
             _lotService.CarEnters(lotId);

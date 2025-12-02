@@ -17,7 +17,8 @@ namespace ParkWhereLib.Services
                 Id = 1,
                 Name = "P-Syd",
                 ParkingSpaces = 75,
-                CarsParked = 0
+                CarsParked = 0,
+                AvailableSpaces = 75
             });
         }
 
@@ -30,7 +31,7 @@ namespace ParkWhereLib.Services
             if (lot == null) return -1;
 
             lot.CarsParked++;
-            return lot.ParkingSpaces - lot.CarsParked;
+            return lot.AvailableSpaces = lot.ParkingSpaces - lot.CarsParked;
         }
 
         public int CarExits(int lotId)
@@ -39,7 +40,7 @@ namespace ParkWhereLib.Services
             if (lot == null) return -1;
 
             lot.CarsParked--;
-            return lot.ParkingSpaces - lot.CarsParked;
+            return lot.AvailableSpaces = lot.ParkingSpaces - lot.CarsParked;
         }
     }
 

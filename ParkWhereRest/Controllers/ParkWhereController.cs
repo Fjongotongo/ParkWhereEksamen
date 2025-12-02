@@ -25,42 +25,15 @@ namespace ParkWhereRest.Controllers
             _httpClient = httpClientFactory.CreateClient("MotorApi"); //  Retrieve the named client
         }
 
-        // GET: api/parkwhere
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Car>> GetAll()
-        {
-            return Ok(_repo.GetAllCars());
-        }
 
-        // GET: api/parkwhere/{id}
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Car> Get(int id)
-        {
 
-            Car? car = _repo.GetCarById(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(car);
-            }
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //public ActionResult<int> GetAvailableSpaces(int lotId)
+        //{
 
-        }
+        //}
 
-        // POST: api/parkwhere
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<Car> Post([FromBody] Car car)
-        {
-            var createdCar = _repo.AddCar(car);
-            // Automatically generate the URL using Get action
-            return CreatedAtAction(nameof(Get), new { id = createdCar.Id }, createdCar);
-        }
 
         // POST: api/parkwhere/plate
 
