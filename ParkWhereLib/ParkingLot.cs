@@ -14,6 +14,7 @@ namespace ParkWhereLib
         public string Name { get; set; }
         public int ParkingSpaces { get; set; }
         public int CarsParked { get; set; }
+        public int AvailableSpaces { get; set; }
 
         private List<ParkingEvent> _events = new List<ParkingEvent>();
 
