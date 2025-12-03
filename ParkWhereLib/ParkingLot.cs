@@ -67,6 +67,8 @@ namespace ParkWhereLib
             CarsParked--;
             return AvailableSpaces = ParkingSpaces - CarsParked;
         }
+
+        public int GetAvailableSpaces() => AvailableSpaces = ParkingSpaces - CarsParked;
         
 
     }
