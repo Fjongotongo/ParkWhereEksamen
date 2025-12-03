@@ -14,21 +14,36 @@ namespace ParkWhereLib.Tests
         private ParkingLot _parkingLot;
 
         [TestInitialize]
-        public void TestInitialize()
+       
+        public void Setup()
         {
-            //_parkingLot._events = new List<ParkingEvent>()
-            //{
-            //    new ParkingEvent(CarRepo.GetCarById(1), DateTime.Now),
-            //    new ParkingEvent(CarRepo.GetCarById(2), DateTime.Now.AddMinutes(4)),
-            //    new ParkingEvent(CarRepo.GetCarById(3), DateTime.Now)
-            //};
+            _parkingLot = new ParkingLot
+            {
+                ParkingSpaces = 100,
+                CarsParked = 0,
+                AvailableSpaces = 100
+            };
         }
 
-        [TestMethod]
-        public void AddParkingEventTest()
+        [TestMethod()]
+        public void Test_CarEnters()
         {
-            Car car = new Car("Nummerplade", "Audi", "Benzin", "RS6");
-            ParkingEvent parkingEvent = new ParkingEvent();
+            int i = 99;
+            int expected = _parkingLot.CarsEnters();
+            Assert.AreEqual(expected, i);
         }
+
+        [TestMethod()]
+        public void Test_StartParkingEvent()
+        {
+            string LicensePlate = "AB12345";
+            DateTime EntryTime = DateTime.Now;
+            int i = _parkingLot.StartParkingEvent(LicensePlate, EntryTime);
+            ParkingEvent parkingevent = new ParkingEvent(LicensePlate, EntryTime);
+            Assert.AreEqual(_parkingLot._events[0].LicensePlate, parkingevent.LicensePlate);
+            Assert.AreEqual(i, 99);
+        }
+
+
     }
 }

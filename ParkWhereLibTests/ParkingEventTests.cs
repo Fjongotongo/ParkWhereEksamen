@@ -12,26 +12,9 @@ namespace ParkWhereLib.Tests
     public class ParkingEventTests
     {
         private ParkingEvent _parkingEvent;
-        private CarRepo _carRepo;
+ 
 
-        [TestInitialize]
-        public void Setup()
-        {
-            _parkingEvent = new ParkingEvent();
-            _carRepo = new CarRepo();
-        }
-
-        [TestMethod()]
-        public void CreateCarIfLicensePlateExists()
-        {
-
-
-
-        }
-
-        [TestMethod()]
-        public void ParkingEventTest1()
-        {
-        }
+       
+       
     }
 }
