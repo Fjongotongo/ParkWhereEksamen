@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace ParkWhereRest.Controllers.Tests
 {
@@ -43,35 +44,15 @@ namespace ParkWhereRest.Controllers.Tests
                 Plate = "AB12345",
                 time = DateTime.Now
             };
-            ActionResult<int> result = _parkWhereController.Available_Parking_Spots(plateDto);
-            Assert.AreEqual(expected, (int)result.Value);
-        } 
 
-        //[TestMethod()]
-        //public void GetAllTest()
-        //{
-        //    var cars = _controller.GetAll();
+            ActionResult<int> actionResult = _parkWhereController.Available_Parking_Spots(plateDto);
 
+            var result = actionResult.Result as OkObjectResult;
 
+            Assert.IsNotNull(result, "Resultatet var null - forventede OkObjectResult");
 
-        //}
+            Assert.AreEqual(expected, result.Value);
+        }
 
-        //[TestMethod()]
-        //public void GetTest()
-        //{
-        //    Assert.Fail();
-        //}
-
-        //[TestMethod()]
-        //public void PostTest()
-        //{
-        //    Assert.Fail();
-        //}
-
-        //[TestMethod()]
-        //public void ReceivePlateTest()
-        //{
-        //    Assert.Fail();
-        //}
     }
 }
