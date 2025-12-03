@@ -29,9 +29,9 @@ namespace ParkWhereRest.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<int> GetAvailableSpots()
+        public ActionResult<int> GetAvailable()
         {
-            return Ok(_parkingLot.AvailableSpaces);
+            return Ok(_parkingLot.GetAvailableSpaces());
         }
 
     }

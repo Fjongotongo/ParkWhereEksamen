@@ -107,5 +107,12 @@ namespace ParkWhereLib.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod()]
+        public void Test_GetAvailableSpaces()
+        {
+            int expected = 99;
+            int actual = _parkingLot.GetAvailableSpaces();
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
