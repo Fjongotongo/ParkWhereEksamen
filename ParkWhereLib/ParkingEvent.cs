@@ -10,15 +10,15 @@ namespace ParkWhereLib
     {
         public int Id { get; set; }
 
-        public Car Car { get; set; }
+        public string LicensePlate { get; set; }
 
         public DateTime EntryTime { get; set; }
 
         public DateTime? ExitTime { get; set; }
 
-        public ParkingEvent(Car car)
+        public ParkingEvent(string licensePlate, DateTime dateTime)
         {
-            Car = car; 
+            LicensePlate = licensePlate;
             EntryTime = DateTime.Now;
         }
 
