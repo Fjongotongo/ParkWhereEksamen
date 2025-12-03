@@ -12,8 +12,8 @@ namespace ParkWhereLib
 
 
         public int Id { get; set; }
-        public int ParkingSpaces { get; set; }
-        public int CarsParked { get; set; }
+        public int ParkingSpaces { get; set; } = 75;
+        public int CarsParked { get; set; } = 1;
         public int AvailableSpaces { get; set; }
 
         public ParkingLot()

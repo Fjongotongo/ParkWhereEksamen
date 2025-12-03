@@ -8,10 +8,24 @@ namespace ParkWhereRest.Controllers
     [ApiController]
     public class ParkWhereController : ControllerBase
     {
-        // Denne klasse matcher JSON fra din Raspberry Pi
+        private ParkingLot _parkingLot;
+        public ParkWhereController(ParkingLot parkingLot)
+        {
+            _parkingLot = parkingLot;
+        }
+
         public class PlateDto
         {
             public string Plate { get; set; }
+            public DateTime time { get; set; }
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<int > Available_Parking_Spots([FromBody] PlateDto plateDto)
+        {
+            return Ok(_parkingLot.EventTrigger(plateDto.Plate, plateDto.time));
+        }
+
     }
 }

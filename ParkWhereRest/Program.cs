@@ -18,6 +18,7 @@ builder.Services.AddHttpClient("MotorApi", client =>
     client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", motorApiConfig["ApiKey"]);
 });
 
+builder.Services.AddSingleton<ParkingLot>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
