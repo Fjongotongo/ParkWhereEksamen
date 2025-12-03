@@ -13,6 +13,5 @@ namespace ParkWhereRest.Controllers
         {
             public string Plate { get; set; }
         }
-
     }
 }

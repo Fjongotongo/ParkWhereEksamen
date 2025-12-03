@@ -20,15 +20,15 @@ namespace ParkWhereLib.Tests
             _parkingLot = new ParkingLot
             {
                 ParkingSpaces = 100,
-                CarsParked = 0,
-                AvailableSpaces = 100
+                CarsParked = 1,
+                AvailableSpaces = 99
             };
         }
 
         [TestMethod()]
         public void Test_CarEnters()
         {
-            int i = 99;
+            int i = 98;
             int expected = _parkingLot.CarsEnters();
             Assert.AreEqual(expected, i);
         }
@@ -41,9 +41,71 @@ namespace ParkWhereLib.Tests
             int i = _parkingLot.StartParkingEvent(LicensePlate, EntryTime);
             ParkingEvent parkingevent = new ParkingEvent(LicensePlate, EntryTime);
             Assert.AreEqual(_parkingLot._events[0].LicensePlate, parkingevent.LicensePlate);
-            Assert.AreEqual(i, 99);
+            Assert.AreEqual(i, 98);
         }
 
+        [TestMethod()]
+        public void Test_CarExists()
+        {
+            int i = 100;
+            int expected = _parkingLot.CarExits();
+            Assert.AreEqual(expected, i);
+        }
+
+        [TestMethod()]
+        public void Test_EndParkingEventWithEventFromList()
+        {
+            string licensePlate = "AB12345";
+            DateTime entryTime = DateTime.Now.AddSeconds(-30);
+            DateTime exitTime = DateTime.Now.AddSeconds(30);
+
+            int i = _parkingLot.StartParkingEvent(licensePlate, entryTime);
+            int end = _parkingLot.EndParkingEvent(licensePlate, exitTime) - 1;
+
+            Assert.AreEqual(i, end);
+        }
+
+        [TestMethod()]
+        public void Test_EndParkingEventWithNoEventFromList()
+        {
+            string licensePlate = "notvalid";
+            DateTime entryTime = DateTime.Now.AddSeconds(-30);
+            DateTime exitTime = DateTime.Now.AddSeconds(30);
+
+            int expcected = _parkingLot.AvailableSpaces;
+            int actual = _parkingLot.EndParkingEvent(licensePlate, exitTime);
+
+            Assert.AreEqual(expcected, actual);
+        }
+
+        [TestMethod()]
+        public void Test_EventTriggerEndsParkingEvent()
+        {
+            string licensePlate = "AB12345";
+            DateTime entryTime = DateTime.Now.AddSeconds(-30);
+            DateTime exitTime = DateTime.Now.AddSeconds(30);
+
+            _parkingLot.EventTrigger(licensePlate, entryTime);
+
+            int expected = 99;
+            int actual = _parkingLot.EventTrigger(licensePlate, exitTime);
+
+
+        }
+
+        [TestMethod()]
+        public void Test_EventTriggerStartsParkingEvent()
+        {
+
+            string licensePlate = "AB12345";
+            DateTime entryTime = DateTime.Now.AddSeconds(-30);
+            DateTime exitTime = DateTime.Now.AddSeconds(30);
+
+            int expected = 98;
+            int actual = _parkingLot.EventTrigger(licensePlate, entryTime);
+
+            Assert.AreEqual(expected, actual);
+        }
 
     }
 }

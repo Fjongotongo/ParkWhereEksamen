@@ -36,9 +36,35 @@ namespace ParkWhereLib
             return CarsEnters();
         }
 
+        public int EndParkingEvent(string licensePlate, DateTime exitTime)
+        {
+            ParkingEvent? evt = _events.FirstOrDefault(e => e.LicensePlate ==  licensePlate && e.ExitTime == null);
+
+            if (evt == null) return AvailableSpaces;
+
+            evt.ExitTime = exitTime;
+
+            return CarExits();
+        }
+
+        public int EventTrigger(string licensePlate, DateTime time)
+        {
+            if (_events.Any(e => e.LicensePlate == licensePlate && e.ExitTime == null))
+            {
+                return EndParkingEvent(licensePlate, time);
+            }
+            return StartParkingEvent(licensePlate, time);
+        }
+
         public int CarsEnters()
         {
             CarsParked++;
+            return AvailableSpaces = ParkingSpaces - CarsParked;
+        }
+
+        public int CarExits()
+        {
+            CarsParked--;
             return AvailableSpaces = ParkingSpaces - CarsParked;
         }
         
