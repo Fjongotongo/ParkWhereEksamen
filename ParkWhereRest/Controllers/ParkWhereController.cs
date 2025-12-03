@@ -27,5 +27,12 @@ namespace ParkWhereRest.Controllers
             return Ok(_parkingLot.EventTrigger(plateDto.Plate, plateDto.time));
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<int> GetAvailableSpots()
+        {
+            return Ok(_parkingLot.AvailableSpaces);
+        }
+
     }
 }

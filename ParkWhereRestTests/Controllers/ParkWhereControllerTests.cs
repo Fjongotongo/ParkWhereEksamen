@@ -35,7 +35,7 @@ namespace ParkWhereRest.Controllers.Tests
         }
 
         [TestMethod()]
-        public void Test_Get_Available_Parking_Spots()
+        public void Test_Available_Parking_Spots()
         {
             int expected = 98;
 
@@ -52,6 +52,17 @@ namespace ParkWhereRest.Controllers.Tests
             Assert.IsNotNull(result, "Resultatet var null - forventede OkObjectResult");
 
             Assert.AreEqual(expected, result.Value);
+        }
+
+        [TestMethod()]
+        public void GetParkingSpots()
+        {
+            int expected = 99;
+            ActionResult<int> actual = _parkWhereController.GetAvailableSpots();
+            
+            var actualResult = actual.Result as OkObjectResult;
+
+            Assert.AreEqual(expected, actualResult.Value);
         }
 
     }
