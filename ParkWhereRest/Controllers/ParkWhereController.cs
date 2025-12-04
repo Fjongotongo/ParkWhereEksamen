@@ -29,14 +29,7 @@ namespace ParkWhereRest.Controllers
 
         public class CarDto
         {
-            [JsonPropertyName("make")]
-            public string Brand { get; set; }
-
-            [JsonPropertyName("model")]
-            public string Model { get; set; }
-
-            [JsonPropertyName("fuel_type")]
-            public string Fueltype { get; set; }
+         
         }
 
         [HttpPost]
