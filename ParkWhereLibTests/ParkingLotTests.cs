@@ -45,7 +45,7 @@ namespace ParkWhereLib.Tests
         }
 
         [TestMethod()]
-        public void Test_CarExists()
+        public void Test_CarExits()
         {
             int i = 100;
             int expected = _parkingLot.CarExits();
