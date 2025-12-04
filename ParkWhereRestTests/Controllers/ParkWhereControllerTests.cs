@@ -27,9 +27,7 @@ namespace ParkWhereRest.Controllers.Tests
         {
             _parkingLot = new ParkingLot()
             {
-                ParkingSpaces = 100,
                 CarsParked = 1,
-                AvailableSpaces = 99
             };
 
             _parkWhereController = new ParkWhereController(_parkingLot);

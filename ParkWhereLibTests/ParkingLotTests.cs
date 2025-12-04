@@ -19,9 +19,7 @@ namespace ParkWhereLib.Tests
         {
             _parkingLot = new ParkingLot
             {
-                ParkingSpaces = 100,
                 CarsParked = 1,
-                AvailableSpaces = 99
             };
         }
 
@@ -72,7 +70,7 @@ namespace ParkWhereLib.Tests
             DateTime entryTime = DateTime.Now.AddSeconds(-30);
             DateTime exitTime = DateTime.Now.AddSeconds(30);
 
-            int expcected = _parkingLot.AvailableSpaces;
+            int expcected = _parkingLot.GetAvailableSpaces();
             int actual = _parkingLot.EndParkingEvent(licensePlate, exitTime);
 
             Assert.AreEqual(expcected, actual);
