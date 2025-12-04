@@ -29,14 +29,14 @@ namespace ParkWhereRest.Controllers
 
         public class CarDto
         {
-            [JsonPropertyName("brand")]
+            [JsonPropertyName("make")]
             public string Brand { get; set; }
 
             [JsonPropertyName("model")]
             public string Model { get; set; }
 
             [JsonPropertyName("fuel_type")]
-            public int Fueltype { get; set; }
+            public string Fueltype { get; set; }
         }
 
         [HttpPost]
@@ -68,19 +68,28 @@ namespace ParkWhereRest.Controllers
                 var response = await _httpClient.GetAsync($"vehicles?registration_number={dto.Plate}");
                 var json = await response.Content.ReadAsStringAsync();
 
-                if (!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)  
                     return StatusCode((int)response.StatusCode, json);
 
+                Console.WriteLine(json);
 
                 // Deserialize JSON into CarDto
-                var car = JsonSerializer.Deserialize<CarDto>(json, new JsonSerializerOptions
+                var cars = JsonSerializer.Deserialize<List<CarDto>>(json, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
 
+
+                if (cars == null || cars.Count == 0)
+                    return NotFound("No vehicle data found");
+
+                var car = cars[0];
+
                 return Ok(car);
             }
+
+
             catch (HttpRequestException ex)
             {
                 return StatusCode(StatusCodes.Status503ServiceUnavailable,
