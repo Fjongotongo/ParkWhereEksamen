@@ -31,7 +31,6 @@ namespace ParkWhereRest.Controllers.Tests
                 CarsParked = 1,
                 AvailableSpaces = 99
             };
-            _parkWhereController = new ParkWhereController(_parkingLot);
         }
 
         [TestMethod()]
@@ -42,7 +41,7 @@ namespace ParkWhereRest.Controllers.Tests
             ParkWhereController.PlateDto plateDto = new ParkWhereController.PlateDto
             {
                 Plate = "AB12345",
-                time = DateTime.Now
+                Time = DateTime.Now
             };
 
             ActionResult<int> actionResult = _parkWhereController.Available_Parking_Spots(plateDto);
@@ -58,7 +57,7 @@ namespace ParkWhereRest.Controllers.Tests
         public void GetParkingSpots()
         {
             int expected = 99;
-            ActionResult<int> actual = _parkWhereController.GetAvailableSpots();
+            ActionResult<int> actual = _parkWhereController.GetAvailable();
             
             var actualResult = actual.Result as OkObjectResult;
 
