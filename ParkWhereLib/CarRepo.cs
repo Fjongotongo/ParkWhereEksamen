@@ -11,9 +11,14 @@ namespace ParkWhereLib
     {
         public List<Car> Cars = new List<Car>();
 
-        public Car AddCar(Car car)
+        private int _nextId = 1;
+
+        public Car AddCarToRepo(Car car)
         {
-            return null;
+            car.Id = _nextId++;
+            Cars.Add(car);
+
+            return car;
         }
     }
 }
