@@ -16,8 +16,8 @@ namespace ParkWhereRest.Controllers.Tests
     [TestClass()]
     public class ParkWhereControllerTests
     {
-        private ParkWhereController _controller;
-        private HttpClient _httpClient;
+        //private ParkWhereController _controller;
+        private IHttpClientFactory _httpClient;
 
         private ParkingLot _parkingLot;
         private ParkWhereController _parkWhereController;
@@ -31,6 +31,8 @@ namespace ParkWhereRest.Controllers.Tests
                 CarsParked = 1,
                 AvailableSpaces = 99
             };
+
+            _parkWhereController = new ParkWhereController(_parkingLot);
         }
 
         [TestMethod()]

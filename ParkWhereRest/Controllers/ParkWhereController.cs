@@ -21,6 +21,11 @@ namespace ParkWhereRest.Controllers
 
         }
 
+        public ParkWhereController(ParkingLot parkingLot)
+        {
+            _parkingLot = parkingLot;
+        }
+
         public class PlateDto
         {
             public string Plate { get; set; }
