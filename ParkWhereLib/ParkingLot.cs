@@ -9,12 +9,8 @@ namespace ParkWhereLib
 {
     public class ParkingLot
     {
-
-
-        public int Id { get; set; } 
-        public int ParkingSpaces { get; set; } = 75;
+        public const int ParkingSpaces = 100;
         public int CarsParked { get; set; } = 1;
-        public int AvailableSpaces { get; set; }
 
         public ParkingLot()
         {
@@ -28,7 +24,7 @@ namespace ParkWhereLib
         {
             ParkingEvent parkingEvent = new ParkingEvent(licensePlate, entryTime);
             {
-                Id = _nextEventId++;
+                parkingEvent.Id = _nextEventId++;
                 parkingEvent.EntryTime = entryTime;
             }
 
@@ -41,7 +37,7 @@ namespace ParkWhereLib
         {
             ParkingEvent? evt = _events.FirstOrDefault(e => e.LicensePlate ==  licensePlate && e.ExitTime == null);
 
-            if (evt == null) return AvailableSpaces;
+            if (evt == null) return GetAvailableSpaces();
 
             evt.ExitTime = exitTime;
 
@@ -60,16 +56,16 @@ namespace ParkWhereLib
         public int CarsEnters()
         {
             CarsParked++;
-            return AvailableSpaces = ParkingSpaces - CarsParked;
+            return ParkingSpaces - CarsParked;
         }
 
         public int CarExits()
         {
             CarsParked--;
-            return AvailableSpaces = ParkingSpaces - CarsParked;
+            return ParkingSpaces - CarsParked;
         }
 
-        public int GetAvailableSpaces() => AvailableSpaces = ParkingSpaces - CarsParked;
+        public int GetAvailableSpaces() => ParkingSpaces - CarsParked;
         
 
     }
