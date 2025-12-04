@@ -39,7 +39,7 @@ namespace ParkWhereRest.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<int > Available_Parking_Spots([FromBody] PlateDto plateDto)
+        public ActionResult<int> ChangeParkingSpotAmount([FromBody] PlateDto plateDto)
         {
             return Ok(_parkingLot.EventTrigger(plateDto.Plate, plateDto.Time));
         }

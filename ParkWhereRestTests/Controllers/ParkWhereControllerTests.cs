@@ -36,7 +36,7 @@ namespace ParkWhereRest.Controllers.Tests
         }
 
         [TestMethod()]
-        public void Test_Available_Parking_Spots()
+        public void ChangeParkingSpotAmountTest()
         {
             int expected = 98;
 
@@ -46,7 +46,7 @@ namespace ParkWhereRest.Controllers.Tests
                 Time = DateTime.Now
             };
 
-            ActionResult<int> actionResult = _parkWhereController.Available_Parking_Spots(plateDto);
+            ActionResult<int> actionResult = _parkWhereController.ChangeParkingSpotAmount(plateDto);
 
             var result = actionResult.Result as OkObjectResult;
 
