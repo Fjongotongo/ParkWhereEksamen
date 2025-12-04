@@ -11,7 +11,7 @@ namespace ParkWhereLib
     {
 
 
-        public int Id { get; set; }
+        public int Id { get; set; } 
         public int ParkingSpaces { get; set; } = 75;
         public int CarsParked { get; set; } = 1;
         public int AvailableSpaces { get; set; }
@@ -29,6 +29,7 @@ namespace ParkWhereLib
             ParkingEvent parkingEvent = new ParkingEvent(licensePlate, entryTime);
             {
                 Id = _nextEventId++;
+                parkingEvent.EntryTime = entryTime;
             }
 
             _events.Add(parkingEvent);

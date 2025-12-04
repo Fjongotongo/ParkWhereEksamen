@@ -19,7 +19,6 @@ namespace ParkWhereLib
         public ParkingEvent(string licensePlate, DateTime dateTime)
         {
             LicensePlate = licensePlate;
-            EntryTime = DateTime.Now;
         }
 
         public ParkingEvent() { }

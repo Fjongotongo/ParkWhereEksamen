@@ -14,7 +14,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddHttpClient("MotorApi", client =>
 {
     var motorApiConfig = builder.Configuration.GetSection("MotorApi");
-    client.BaseAddress = new Uri(motorApiConfig["BaseUrl"]!);
+    client.BaseAddress = new Uri(motorApiConfig["https://motorapi.dk/"]!);
     client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", motorApiConfig["ApiKey"]);
 });
 

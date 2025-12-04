@@ -58,7 +58,7 @@ namespace ParkWhereRest.Controllers.Tests
         public void GetParkingSpots()
         {
             int expected = 99;
-            ActionResult<int> actual = _parkWhereController.GetAvailableSpots();
+            ActionResult<int> actual = _parkWhereController.GetAvailable();
             
             var actualResult = actual.Result as OkObjectResult;
 
