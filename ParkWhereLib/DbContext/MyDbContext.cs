@@ -12,6 +12,11 @@ public partial class MyDbContext : DbContext
     public MyDbContext()
     {
     }
+
+    public MyDbContext(DbContextOptions options) : base(options)
+    {
+    }
+
     public MyDbContext(DbContextOptions<MyDbContext> options, IConfiguration configuration)
             : base(options)
     {
