@@ -30,7 +30,7 @@ namespace ParkWhereRest.Controllers
         public ActionResult<int> ChangeParkingSpotAmount([FromBody] PlateDto plateDto)
         {
             // Use _parkingLotDb, NOT _parkingLot
-            return Ok(_parkingLotDb.EventTrigger(plateDto.Plate, plateDto.Time));
+            return Ok(_parkingLotDb.EventTrigger(plateDto.Plate, plateDto.Time, 1));
         }
 
         [HttpGet]

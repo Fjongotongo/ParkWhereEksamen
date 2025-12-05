@@ -27,17 +27,30 @@ namespace ParkWhereLib
             {
                 return EndParkingEvent(activeEvent, time, parkingLotId);
             }
-            return StartParkingEvent(licensePlate, time, parkingLotId);
+            return StartParkingEvent(licensePlate, time);
         }
 
-        public int StartParkingEvent(string licensePlate, DateTime entryTime, int parkingLotId)
+        public int StartParkingEvent(string licensePlate, DateTime entryTime)
         {
-            ParkingEvent parkingEvent = new ParkingEvent(licensePlate, entryTime, parkingLotId);
 
+            int parkingLotId = 1; // assume only one lot
+
+            var lot = _context.ParkingLots.FirstOrDefault(l => l.ParkingLotId == parkingLotId);
+            if (lot == null)
+            {
+                throw new Exception("Parking lot does not exist");
+            }
+
+            var parkingEvent = new ParkingEvent(licensePlate, entryTime, parkingLotId);
             _context.ParkingEvents.Add(parkingEvent);
+
+            // increment CarsParked
+            lot.CarsParked++;
+            _context.ParkingLots.Update(lot);
+
             _context.SaveChanges();
 
-            return GetAvailableSpaces();
+            return ParkingLotDb.ParkingSpaces - lot.CarsParked;
         }
 
         public int EndParkingEvent(ParkingEvent evt, DateTime exitTime, int parkingLotId)

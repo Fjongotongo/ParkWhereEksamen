@@ -11,8 +11,9 @@ namespace ParkWhereLib
     {
 
         public int ParkingLotId { get; set; }
+
         public const int ParkingSpaces = 100;
-        public int CarsParked { get; set; } = 1;
+        public int CarsParked { get; set; } = 0;
 
         public ParkingLot()
         {
@@ -24,7 +25,7 @@ namespace ParkWhereLib
 
         public int StartParkingEvent(string licensePlate, DateTime entryTime)
         {
-            ParkingEvent parkingEvent = new ParkingEvent(licensePlate, entryTime);
+            ParkingEvent parkingEvent = new ParkingEvent(licensePlate, entryTime, 1);
             {
                 parkingEvent.Id = _nextEventId++;
                 parkingEvent.EntryTime = entryTime;
