@@ -32,13 +32,14 @@ namespace ParkWhereLib.Tests
         }
 
         [TestMethod()]
-        public void Test_StartParkingEvent()
+        public void Test_StartParkingEventReturnsUpdatedSpacesAfterNewParking()
         {
             string LicensePlate = "AB12345";
             DateTime EntryTime = DateTime.Now;
             int i = _parkingLot.StartParkingEvent(LicensePlate, EntryTime);
             ParkingEvent parkingevent = new ParkingEvent(LicensePlate, EntryTime);
-            Assert.AreEqual(_parkingLot._events[0].LicensePlate, parkingevent.LicensePlate);
+            Assert.AreEqual(_parkingLot._events.First().LicensePlate, parkingevent.LicensePlate);
+
             Assert.AreEqual(i, 98);
         }
 

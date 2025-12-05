@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using ParkWhereLib;
+using ParkWhereLib.Models;
 using ParkWhereRest.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "AllowAll",
         policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
 });
+
+
+builder.Services.AddDbContext<MyDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 builder.Services.AddHttpClient("MotorApi", client =>
 {

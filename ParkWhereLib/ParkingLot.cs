@@ -9,6 +9,8 @@ namespace ParkWhereLib
 {
     public class ParkingLot
     {
+
+        public int ParkingLotId { get; set; }
         public const int ParkingSpaces = 100;
         public int CarsParked { get; set; } = 1;
 
@@ -18,7 +20,7 @@ namespace ParkWhereLib
 
         private static int _nextEventId = 1;
 
-        public List<ParkingEvent> _events = new List<ParkingEvent>();
+        public ICollection<ParkingEvent> _events = new List<ParkingEvent>();
 
         public int StartParkingEvent(string licensePlate, DateTime entryTime)
         {
