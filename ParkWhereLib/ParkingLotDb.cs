@@ -25,7 +25,7 @@ namespace ParkWhereLib
 
             if (activeEvent != null)
             {
-                return EndParkingEvent(activeEvent, time, parkingLotId);
+                return EndParkingEvent(activeEvent, time);
             }
             return StartParkingEvent(licensePlate, time);
         }
