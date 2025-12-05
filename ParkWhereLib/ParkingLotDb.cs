@@ -53,14 +53,34 @@ namespace ParkWhereLib
             return ParkingLotDb.ParkingSpaces - lot.CarsParked;
         }
 
-        public int EndParkingEvent(ParkingEvent evt, DateTime exitTime, int parkingLotId)
+        public int EndParkingEvent(ParkingEvent evt, DateTime exitTime)
         {
-            evt.ExitTime = exitTime;
 
+            int parkingLotId = 1; // assume only one lot
+
+            // 1. Get the parking lot
+            var lot = _context.ParkingLots.FirstOrDefault(l => l.ParkingLotId == parkingLotId);
+            if (lot == null)
+            {
+                throw new Exception("Parking lot does not exist");
+            }
+
+            // 2. Set the exit time for the parking event
+            evt.ExitTime = exitTime;
             _context.ParkingEvents.Update(evt);
+
+            // 3. Decrement the cars parked in the lot
+            if (lot.CarsParked > 0)
+            {
+                lot.CarsParked--;
+            }
+            _context.ParkingLots.Update(lot);
+
+            // 4. Save all changes to the database
             _context.SaveChanges();
 
-            return GetAvailableSpaces();
+            // 5. Return available spaces
+            return ParkingLotDb.ParkingSpaces - lot.CarsParked;
         }
 
         public int GetAvailableSpaces()
