@@ -1,82 +1,93 @@
-﻿using ParkWhereLib.DbService;
-using ParkWhereLib.Models;
+﻿using ParkWhereLib.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ParkWhereLib
 {
     public class ParkingLotDb
     {
-        private MyDbContext _context;
+        private readonly MyDbContext _context;
 
-
-        public int ParkingLotId { get; set; }
         public const int ParkingSpaces = 100;
-        public int CarsParked { get; set; } = 1;
 
         public ParkingLotDb(MyDbContext context)
         {
             _context = context;
         }
 
-        private static int _nextEventId = 1;
 
-        public ICollection<ParkingEvent> _events = new List<ParkingEvent>();
-
-        public int StartParkingEvent(string licensePlate, DateTime entryTime)
+        // Logic to decide if we are starting or ending parking
+        public int EventTrigger(string licensePlate, DateTime time, int parkingLotId)
         {
-            ParkingEvent parkingEvent = new ParkingEvent(licensePlate, entryTime);
+            // Check DB for an active parking event (ExitTime is null)
+            var activeEvent = _context.ParkingEvents
+                .FirstOrDefault(e => e.LicensePlate == licensePlate && e.ExitTime == null);
+
+            if (activeEvent != null)
             {
-                parkingEvent.Id = _nextEventId++;
-                parkingEvent.EntryTime = entryTime;
-            }
-
-            _context.ParkingEvents.Add(parkingEvent);
-            _context.SaveChanges();
-           // _events.Add(parkingEvent);
-
-            return CarsEnters();
-        }
-
-        public int EndParkingEvent(string licensePlate, DateTime exitTime)
-        {
-            ParkingEvent? evt = _events.FirstOrDefault(e => e.LicensePlate == licensePlate && e.ExitTime == null);
-
-            if (evt == null) return GetAvailableSpaces();
-
-            evt.ExitTime = exitTime;
-            _context.ParkingEvents.Update(evt);
-            _context.SaveChanges();
-
-            return CarExits();
-        }
-
-        public int EventTrigger(string licensePlate, DateTime time)
-        {
-            if (_events.Any(e => e.LicensePlate == licensePlate && e.ExitTime == null))
-            {
-                return EndParkingEvent(licensePlate, time);
+                return EndParkingEvent(activeEvent, time);
             }
             return StartParkingEvent(licensePlate, time);
         }
 
-        public int CarsEnters()
+        public int StartParkingEvent(string licensePlate, DateTime entryTime)
         {
-            CarsParked++;
-           // _context.ParkingLots.Update(CarsParked);
-            return ParkingSpaces - CarsParked;
+
+            int parkingLotId = 1; // assume only one lot
+
+            var lot = _context.ParkingLots.FirstOrDefault(l => l.ParkingLotId == parkingLotId);
+            if (lot == null)
+            {
+                throw new Exception("Parking lot does not exist");
+            }
+
+            var parkingEvent = new ParkingEvent(licensePlate, entryTime, parkingLotId);
+            _context.ParkingEvents.Add(parkingEvent);
+
+            // increment CarsParked
+            lot.CarsParked++;
+            _context.ParkingLots.Update(lot);
+
+            _context.SaveChanges();
+
+            return ParkingLotDb.ParkingSpaces - lot.CarsParked;
         }
 
-        public int CarExits()
+        public int EndParkingEvent(ParkingEvent evt, DateTime exitTime)
         {
-            CarsParked--;
-            return ParkingSpaces - CarsParked;
+
+            int parkingLotId = 1; // assume only one lot
+
+            // 1. Get the parking lot
+            var lot = _context.ParkingLots.FirstOrDefault(l => l.ParkingLotId == parkingLotId);
+            if (lot == null)
+            {
+                throw new Exception("Parking lot does not exist");
+            }
+
+            // 2. Set the exit time for the parking event
+            evt.ExitTime = exitTime;
+            _context.ParkingEvents.Update(evt);
+
+            // 3. Decrement the cars parked in the lot
+            if (lot.CarsParked > 0)
+            {
+                lot.CarsParked--;
+            }
+            _context.ParkingLots.Update(lot);
+
+            // 4. Save all changes to the database
+            _context.SaveChanges();
+
+            // 5. Return available spaces
+            return ParkingLotDb.ParkingSpaces - lot.CarsParked;
         }
 
-        public int GetAvailableSpaces() => ParkingSpaces - CarsParked;
-
+        public int GetAvailableSpaces()
+        {
+            // Calculate directly from DB: Total Spaces - Count of cars currently parked (ExitTime is null)
+            int currentlyParked = _context.ParkingEvents.Count(e => e.ExitTime == null);
+            return ParkingSpaces - currentlyParked;
+        }
     }
 }

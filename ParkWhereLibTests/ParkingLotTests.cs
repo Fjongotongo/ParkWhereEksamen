@@ -37,7 +37,7 @@ namespace ParkWhereLib.Tests
             string LicensePlate = "AB12345";
             DateTime EntryTime = DateTime.Now;
             int i = _parkingLot.StartParkingEvent(LicensePlate, EntryTime);
-            ParkingEvent parkingevent = new ParkingEvent(LicensePlate, EntryTime);
+            ParkingEvent parkingevent = new ParkingEvent(LicensePlate, EntryTime, 1);
             Assert.AreEqual(_parkingLot._events.First().LicensePlate, parkingevent.LicensePlate);
 
             Assert.AreEqual(i, 98);
