@@ -17,11 +17,11 @@ namespace ParkWhereLib
         public int ParkingLotId { get; set; }
 
         // Constructor fix
-        public ParkingEvent(string licensePlate, DateTime entryTime)
+        public ParkingEvent(string licensePlate, DateTime entryTime, int parkingLotId)
         {
             LicensePlate = licensePlate;
             EntryTime = entryTime;
-            ParkingLotId = 1; // You must default this to a valid ID (e.g., 1)
+            ParkingLotId = parkingLotId;
         }
 
         public ParkingEvent() { }

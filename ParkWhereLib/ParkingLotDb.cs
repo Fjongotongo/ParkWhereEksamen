@@ -17,7 +17,7 @@ namespace ParkWhereLib
 
 
         // Logic to decide if we are starting or ending parking
-        public int EventTrigger(string licensePlate, DateTime time)
+        public int EventTrigger(string licensePlate, DateTime time, int parkingLotId)
         {
             // Check DB for an active parking event (ExitTime is null)
             var activeEvent = _context.ParkingEvents
@@ -25,17 +25,14 @@ namespace ParkWhereLib
 
             if (activeEvent != null)
             {
-                return EndParkingEvent(activeEvent, time);
+                return EndParkingEvent(activeEvent, time, parkingLotId);
             }
-            return StartParkingEvent(licensePlate, time);
+            return StartParkingEvent(licensePlate, time, parkingLotId);
         }
 
-        public int StartParkingEvent(string licensePlate, DateTime entryTime)
+        public int StartParkingEvent(string licensePlate, DateTime entryTime, int parkingLotId)
         {
-            ParkingEvent parkingEvent = new ParkingEvent(licensePlate, entryTime);
-
-            // You MUST link it to the existing lot ID
-            parkingEvent.ParkingLotId = 1;
+            ParkingEvent parkingEvent = new ParkingEvent(licensePlate, entryTime, parkingLotId);
 
             _context.ParkingEvents.Add(parkingEvent);
             _context.SaveChanges();
@@ -43,7 +40,7 @@ namespace ParkWhereLib
             return GetAvailableSpaces();
         }
 
-        public int EndParkingEvent(ParkingEvent evt, DateTime exitTime)
+        public int EndParkingEvent(ParkingEvent evt, DateTime exitTime, int parkingLotId)
         {
             evt.ExitTime = exitTime;
 
