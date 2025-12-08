@@ -1,5 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ParkWhereLib;
+using ParkWhereLib.DbService;
+using ParkWhereLib.Models;
+using System.Net.Http;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ParkWhereRest.Controllers
@@ -9,11 +15,20 @@ namespace ParkWhereRest.Controllers
     public class ParkWhereController : ControllerBase
     {
         private readonly IParkingLot _parkingLot;
+        private readonly HttpClient _httpClient;
+        private readonly GenericDbService<Car> _carService;
 
-        // Constructor Injection
-        public ParkWhereController(IParkingLot parkingLot)
+        private readonly MyDbContext _context;
+
+        public ParkWhereController(IParkingLot parkingLot,
+                                   IHttpClientFactory httpClientFactory,
+                                   GenericDbService<Car> carService,
+                                   MyDbContext context)
         {
             _parkingLot = parkingLot;
+            _httpClient = httpClientFactory.CreateClient("MotorApi");
+            _carService = carService;
+            _context = context;
         }
 
         public class PlateDto
@@ -27,10 +42,38 @@ namespace ParkWhereRest.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<int> ChangeParkingSpotAmount([FromBody] PlateDto plateDto)
+        public async Task<IActionResult> ChangeParkingSpotAmount([FromBody] PlateDto dto)
         {
-            // Use _parkingLotDb, NOT _parkingLot
-            return Ok(_parkingLot.EventTrigger(plateDto.Plate, plateDto.Time, 1));
+
+
+            var existingEvent = await _context.ParkingEvents
+                                   .AsNoTracking()
+                                   .FirstOrDefaultAsync(e => e.LicensePlate == dto.Plate);
+
+
+            if (existingEvent == null)
+            {
+                var response = await _httpClient.GetAsync($"vehicles?registration_number={dto.Plate}");
+                response.EnsureSuccessStatusCode();
+                var json = await response.Content.ReadAsStringAsync();
+
+                var carsFromApi = JsonSerializer.Deserialize<Car[]>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                var car = carsFromApi?.FirstOrDefault();
+                if (car != null)
+                {
+                    await _carService.AddObjectAsync(car); // Save locally
+                }
+            }
+
+
+
+
+            // Trigger parking lot event
+            return Ok(_parkingLot.EventTrigger(dto.Plate, dto.Time, 1));
         }
 
         [HttpGet]
