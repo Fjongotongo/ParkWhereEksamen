@@ -24,6 +24,16 @@ builder.Services.AddHttpClient("MotorApi", client =>
 });
 
 //builder.Services.AddSingleton<ParkingLot>();
+bool useSql = true;
+if (useSql)
+{
+    builder.Services.AddSingleton<IParkingLot, ParkingLotDb>();
+}
+else
+{
+    builder.Services.AddSingleton<IParkingLot, ParkingLot>();
+}
+
 builder.Services.AddScoped<ParkingLotDb>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

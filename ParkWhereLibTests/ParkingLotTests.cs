@@ -23,13 +23,6 @@ namespace ParkWhereLib.Tests
             };
         }
 
-        [TestMethod()]
-        public void Test_CarEnters()
-        {
-            int i = 98;
-            int expected = _parkingLot.CarsEnters();
-            Assert.AreEqual(expected, i);
-        }
 
         [TestMethod()]
         public void Test_StartParkingEventReturnsUpdatedSpacesAfterNewParking()
@@ -41,14 +34,6 @@ namespace ParkWhereLib.Tests
             Assert.AreEqual(_parkingLot._events.First().LicensePlate, parkingevent.LicensePlate);
 
             Assert.AreEqual(i, 98);
-        }
-
-        [TestMethod()]
-        public void Test_CarExits()
-        {
-            int i = 100;
-            int expected = _parkingLot.CarExits();
-            Assert.AreEqual(expected, i);
         }
 
         [TestMethod()]
@@ -84,10 +69,10 @@ namespace ParkWhereLib.Tests
             DateTime entryTime = DateTime.Now.AddSeconds(-30);
             DateTime exitTime = DateTime.Now.AddSeconds(30);
 
-            _parkingLot.EventTrigger(licensePlate, entryTime);
+            _parkingLot.EventTrigger(licensePlate, entryTime, 1);
 
             int expected = 99;
-            int actual = _parkingLot.EventTrigger(licensePlate, exitTime);
+            int actual = _parkingLot.EventTrigger(licensePlate, exitTime, 1);
 
 
         }
@@ -101,7 +86,7 @@ namespace ParkWhereLib.Tests
             DateTime exitTime = DateTime.Now.AddSeconds(30);
 
             int expected = 98;
-            int actual = _parkingLot.EventTrigger(licensePlate, entryTime);
+            int actual = _parkingLot.EventTrigger(licensePlate, entryTime, 1);
 
             Assert.AreEqual(expected, actual);
         }

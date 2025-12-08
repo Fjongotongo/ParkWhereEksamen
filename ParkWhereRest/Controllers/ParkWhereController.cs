@@ -8,12 +8,12 @@ namespace ParkWhereRest.Controllers
     [ApiController]
     public class ParkWhereController : ControllerBase
     {
-        private readonly ParkingLotDb _parkingLotDb;
+        private readonly IParkingLot _parkingLot;
 
         // Constructor Injection
-        public ParkWhereController(ParkingLotDb parkingLotDb)
+        public ParkWhereController(IParkingLot parkingLot)
         {
-            _parkingLotDb = parkingLotDb;
+            _parkingLot = parkingLot;
         }
 
         public class PlateDto
@@ -30,7 +30,7 @@ namespace ParkWhereRest.Controllers
         public ActionResult<int> ChangeParkingSpotAmount([FromBody] PlateDto plateDto)
         {
             // Use _parkingLotDb, NOT _parkingLot
-            return Ok(_parkingLotDb.EventTrigger(plateDto.Plate, plateDto.Time, 1));
+            return Ok(_parkingLot.EventTrigger(plateDto.Plate, plateDto.Time, 1));
         }
 
         [HttpGet]
@@ -38,7 +38,7 @@ namespace ParkWhereRest.Controllers
         public ActionResult<int> GetAvailable()
         {
             // Use the DB service
-            return Ok(_parkingLotDb.GetAvailableSpaces());
+            return Ok(_parkingLot.GetAvailableSpaces());
         }
     }
 }

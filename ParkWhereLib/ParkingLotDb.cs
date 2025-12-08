@@ -1,10 +1,11 @@
 ﻿using ParkWhereLib.Models;
 using System;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ParkWhereLib
 {
-    public class ParkingLotDb
+    public class ParkingLotDb : IParkingLot
     {
         private readonly MyDbContext _context;
 
@@ -20,12 +21,9 @@ namespace ParkWhereLib
         public int EventTrigger(string licensePlate, DateTime time, int parkingLotId)
         {
             // Check DB for an active parking event (ExitTime is null)
-            var activeEvent = _context.ParkingEvents
-                .FirstOrDefault(e => e.LicensePlate == licensePlate && e.ExitTime == null);
-
-            if (activeEvent != null)
+            if (_context.ParkingEvents.Any(e => e.LicensePlate == licensePlate && e.ExitTime == null))
             {
-                return EndParkingEvent(activeEvent, time);
+                return EndParkingEvent(licensePlate, time);
             }
             return StartParkingEvent(licensePlate, time);
         }
@@ -53,7 +51,7 @@ namespace ParkWhereLib
             return ParkingLotDb.ParkingSpaces - lot.CarsParked;
         }
 
-        public int EndParkingEvent(ParkingEvent evt, DateTime exitTime)
+        public int EndParkingEvent(string licensePlate, DateTime exitTime)
         {
 
             int parkingLotId = 1; // assume only one lot
@@ -66,6 +64,7 @@ namespace ParkWhereLib
             }
 
             // 2. Set the exit time for the parking event
+            ParkingEvent? evt = _context.ParkingEvents.FirstOrDefault(e => e.LicensePlate == licensePlate && e.ExitTime == null);
             evt.ExitTime = exitTime;
             _context.ParkingEvents.Update(evt);
 

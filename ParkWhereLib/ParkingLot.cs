@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ParkWhereLib
 {
-    public class ParkingLot
+    public class ParkingLot : IParkingLot
     {
 
         public int ParkingLotId { get; set; }
@@ -33,21 +33,23 @@ namespace ParkWhereLib
 
             _events.Add(parkingEvent);
 
-            return CarsEnters();
+            CarsParked++;
+            return ParkingSpaces - CarsParked;
         }
 
         public int EndParkingEvent(string licensePlate, DateTime exitTime)
         {
-            ParkingEvent? evt = _events.FirstOrDefault(e => e.LicensePlate ==  licensePlate && e.ExitTime == null);
+            ParkingEvent? evt = _events.FirstOrDefault(e => e.LicensePlate == licensePlate && e.ExitTime == null);
 
             if (evt == null) return GetAvailableSpaces();
 
             evt.ExitTime = exitTime;
 
-            return CarExits();
+            CarsParked--;
+            return ParkingSpaces - CarsParked;
         }
 
-        public int EventTrigger(string licensePlate, DateTime time)
+        public int EventTrigger(string licensePlate, DateTime time, int parkingLotId)
         {
             if (_events.Any(e => e.LicensePlate == licensePlate && e.ExitTime == null))
             {
@@ -56,20 +58,8 @@ namespace ParkWhereLib
             return StartParkingEvent(licensePlate, time);
         }
 
-        public int CarsEnters()
-        {
-            CarsParked++;
-            return ParkingSpaces - CarsParked;
-        }
-
-        public int CarExits()
-        {
-            CarsParked--;
-            return ParkingSpaces - CarsParked;
-        }
-
         public int GetAvailableSpaces() => ParkingSpaces - CarsParked;
-        
+
 
     }
 }
