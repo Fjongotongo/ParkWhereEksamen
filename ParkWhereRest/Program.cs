@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ParkWhereLib;
+using ParkWhereLib.DbService;
 using ParkWhereLib.Models;
 using ParkWhereRest.Controllers;
 
@@ -19,7 +20,7 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 builder.Services.AddHttpClient("MotorApi", client =>
 {
     var motorApiConfig = builder.Configuration.GetSection("MotorApi");
-    client.BaseAddress = new Uri(motorApiConfig["https://motorapi.dk/"]!);
+    client.BaseAddress = new Uri(motorApiConfig["BaseUrl"]!);
     client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", motorApiConfig["ApiKey"]);
 });
 
@@ -27,12 +28,16 @@ builder.Services.AddHttpClient("MotorApi", client =>
 bool useSql = true;
 if (useSql)
 {
-    builder.Services.AddSingleton<IParkingLot, ParkingLotDb>();
+    builder.Services.AddScoped<IParkingLot, ParkingLotDb>();
 }
 else
 {
     builder.Services.AddSingleton<IParkingLot, ParkingLot>();
 }
+
+// 4. Register generic DB service
+builder.Services.AddScoped(typeof(GenericDbService<>)); // This allows injection for Car, ParkingEvent, etc.
+
 
 builder.Services.AddScoped<ParkingLotDb>();
 builder.Services.AddEndpointsApiExplorer();
