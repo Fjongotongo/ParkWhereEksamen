@@ -83,5 +83,23 @@ namespace ParkWhereRest.Controllers
             // Use the DB service
             return Ok(_parkingLot.GetAvailableSpaces());
         }
+
+        [HttpGet("events-per-hour")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> GetEventsPerHour()
+        {
+            var hourlyCounts = await _context.ParkingEvents
+                .GroupBy(e => e.EntryTime.Hour)
+                .Select(g => new
+                {
+                    Hour = g.Key,
+                    Count = g.Count()
+                })
+                .OrderBy(x => x.Hour)
+                .ToListAsync();
+
+            return Ok(hourlyCounts);
+        }
+
     }
 }
