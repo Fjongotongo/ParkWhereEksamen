@@ -31,6 +31,7 @@ namespace ParkWhereLib.Tests
             };
             _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30), 1);
             _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30), 1);
+            _parkingLot.EventTrigger("AB12346", DateTime.Now.AddMinutes(-30), 1);
         }
 
 
@@ -43,7 +44,7 @@ namespace ParkWhereLib.Tests
             ParkingEvent parkingevent = new ParkingEvent(LicensePlate, EntryTime, 1);
             Assert.AreEqual(_parkingLot._events.First().LicensePlate, parkingevent.LicensePlate);
 
-            Assert.AreEqual(i, 98);
+            Assert.AreEqual(i, 97);
         }
 
         [TestMethod()]
@@ -95,7 +96,7 @@ namespace ParkWhereLib.Tests
             DateTime entryTime = DateTime.Now.AddSeconds(-30);
             DateTime exitTime = DateTime.Now.AddSeconds(30);
 
-            int expected = 98;
+            int expected = 97;
             int actual = _parkingLot.EventTrigger(licensePlate, entryTime, 1);
 
             Assert.AreEqual(expected, actual);
@@ -104,7 +105,7 @@ namespace ParkWhereLib.Tests
         [TestMethod()]
         public void Test_GetAvailableSpaces()
         {
-            int expected = 99;
+            int expected = 98;
             int actual = _parkingLot.GetAvailableSpaces();
             Assert.AreEqual(expected, actual);
         }
