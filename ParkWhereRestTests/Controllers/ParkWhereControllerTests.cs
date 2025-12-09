@@ -24,35 +24,42 @@ namespace ParkWhereRest.Controllers.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            // 1. Setup af In-Memory Database options
+            // 1. Setup In-Memory Database
             var options = new DbContextOptionsBuilder<MyDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            // 2. Initialiser Context og den rigtige GenericDbService
             _context = new MyDbContext(options);
             _carService = new GenericDbService<Car>(options);
 
-            // 3. Setup af Mocks
-            _mockParkingLot = new Mock<IParkingLot>();
-            _mockHttpClientFactory = new Mock<IHttpClientFactory>();
-
-            // Fake HttpClient så den ikke er null
-            _mockHttpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>()))
-                                  .Returns(new HttpClient());
-
-            // 4. Seed databasen for at undgå API kald i controlleren
+            // Seed med eksisterende bil (AB12345) så den test ikke rammer API
             _context.ParkingEvents.Add(new ParkingEvent { LicensePlate = "AB12345" });
             _context.SaveChanges();
 
-            // 5. Setup af forventede svar fra ParkingLot (så dine tests passer)
+            // 2. Setup af HttpClient (Simulerer din appsettings konfiguration)
+            var client = new HttpClient();
+
+            // Konfiguration ifølge https://v1.motorapi.dk/doc/
+            client.BaseAddress = new Uri("https://v1.motorapi.dk/");
+
+            // --- OBS: INDSÆT DIN RIGTIGE NØGLE HERUNDER ---
+            client.DefaultRequestHeaders.Add("X-Auth-Token", "mllr9po25fx4ylvtymlvwfoqxmxdh9rx");
+
+            _mockHttpClientFactory = new Mock<IHttpClientFactory>();
+
+            // Vi opsætter mocken til at reagere specifikt på navnet "MotorApi"
+            // ligesom i din controller: _httpClient = httpClientFactory.CreateClient("MotorApi");
+            _mockHttpClientFactory.Setup(x => x.CreateClient("MotorApi"))
+                                  .Returns(client);
+
+            // 3. Setup ParkingLot Mock
+            _mockParkingLot = new Mock<IParkingLot>();
             _mockParkingLot.Setup(x => x.EventTrigger(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<int>()))
                            .Returns(98);
-
             _mockParkingLot.Setup(x => x.GetAvailableSpaces())
                            .Returns(99);
 
-            // 6. Instansier Controlleren med alle dependencies
+            // 4. Start Controlleren
             _controller = new ParkWhereController(
                 _mockParkingLot.Object,
                 _mockHttpClientFactory.Object,
@@ -64,32 +71,41 @@ namespace ParkWhereRest.Controllers.Tests
         [TestMethod()]
         public void ChangeParkingSpotAmountTest()
         {
+            // Eksisterende bil (AB12345) -> Ingen API kald
             int expected = 98;
+            var plateDto = new ParkWhereController.PlateDto { Plate = "AB12345", Time = DateTime.Now };
 
-            ParkWhereController.PlateDto plateDto = new ParkWhereController.PlateDto
-            {
-                Plate = "AB12345",
-                Time = DateTime.Now
-            };
+            var actionResult = _controller.ChangeParkingSpotAmount(plateDto).Result;
+            var result = actionResult as OkObjectResult;
 
-            Task<IActionResult> actionResult = _controller.ChangeParkingSpotAmount(plateDto);
-
-            var result = actionResult.Result as OkObjectResult;
-
-            Assert.IsNotNull(result, "Resultatet var null - forventede OkObjectResult");
-
+            Assert.IsNotNull(result);
             Assert.AreEqual(expected, result.Value);
         }
+
+        //Denne test er udkommenteret da den bruger 1 API kald pr kørt test, dog virker den som den skal,
+        //så blot indkommenter og kør den hvis det skal vises.
+
+        //[TestMethod()]
+        //public void ChangeParkingSpotAmountTests()
+        //{
+        //    int expected = 98;
+        //    var plateDto = new ParkWhereController.PlateDto { Plate = "DF12345", Time = DateTime.Now };
+
+        //    var actionResult = _controller.ChangeParkingSpotAmount(plateDto).Result;
+        //    var result = actionResult as OkObjectResult;
+
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual(expected, result.Value);
+        //}
 
         [TestMethod()]
         public void GetParkingSpots()
         {
             int expected = 99;
-            ActionResult<int> actual = _controller.GetAvailable();
+            var actionResult = _controller.GetAvailable().Result;
+            var result = actionResult as OkObjectResult;
 
-            var actualResult = actual.Result as OkObjectResult;
-
-            Assert.AreEqual(expected, actualResult.Value);
+            Assert.AreEqual(expected, result.Value);
         }
     }
 }
