@@ -43,5 +43,13 @@ namespace ParkWhereLib.DbService
             }
         }
 
+        public async Task GetObjectsAsync(Func<T, bool> predicate)
+        {
+            using (var context = new MyDbContext(_options))
+            {
+                var results = context.Set<T>().AsNoTracking().Where(predicate).ToList();
+            }
+        }
+
     }
 }
