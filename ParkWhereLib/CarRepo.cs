@@ -20,5 +20,10 @@ namespace ParkWhereLib
 
             return car;
         }
+
+        public List<Car> GetCarsFromRepo()
+        {
+            return Cars;
+        }
     }
 }
