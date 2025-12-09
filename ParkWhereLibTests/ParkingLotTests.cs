@@ -21,6 +21,16 @@ namespace ParkWhereLib.Tests
             {
                 CarsParked = 1,
             };
+
+            ParkingEvent evt = new ParkingEvent
+            {
+                LicensePlate = "AB12345",
+                EntryTime = DateTime.Now.AddMinutes(-30),
+                ExitTime = null,
+                ParkingLotId = 1
+            };
+            _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30), 1);
+            _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30), 1);
         }
 
 
