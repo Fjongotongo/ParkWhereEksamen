@@ -42,6 +42,7 @@ namespace ParkWhereRest.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeParkingSpotAmount([FromBody] PlateDto dto)
         {
 
@@ -67,6 +68,7 @@ namespace ParkWhereRest.Controllers
                 {
                     await _carService.AddObjectAsync(car); // Save locally
                 }
+                
             }
 
 
@@ -75,6 +77,7 @@ namespace ParkWhereRest.Controllers
             // Trigger parking lot event
             return Ok(_parkingLot.EventTrigger(dto.Plate, dto.Time, 1));
         }
+        
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
