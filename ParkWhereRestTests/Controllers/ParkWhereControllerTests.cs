@@ -1,36 +1,64 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using ParkWhereLib;
+using ParkWhereLib.DbService;
+using ParkWhereLib.Models;
 using ParkWhereRest.Controllers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace ParkWhereRest.Controllers.Tests
 {
     [TestClass()]
     public class ParkWhereControllerTests
     {
-        //private ParkWhereController _controller;
-        private IHttpClientFactory _httpClient;
-
-        private ParkingLot _parkingLot;
-        private ParkWhereController _parkWhereController;
+        private Mock<IParkingLot> _mockParkingLot;
+        private Mock<IHttpClientFactory> _mockHttpClientFactory;
+        private GenericDbService<Car> _carService;
+        private MyDbContext _context;
+        private ParkWhereController _controller;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            _parkingLot = new ParkingLot()
-            {
-                CarsParked = 1,
-            };
+            // 1. Setup af In-Memory Database options
+            var options = new DbContextOptionsBuilder<MyDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
 
-            _parkWhereController = new ParkWhereController(_parkingLot);
+            // 2. Initialiser Context og den rigtige GenericDbService
+            _context = new MyDbContext(options);
+            _carService = new GenericDbService<Car>(options);
+
+            // 3. Setup af Mocks
+            _mockParkingLot = new Mock<IParkingLot>();
+            _mockHttpClientFactory = new Mock<IHttpClientFactory>();
+
+            // Fake HttpClient så den ikke er null
+            _mockHttpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>()))
+                                  .Returns(new HttpClient());
+
+            // 4. Seed databasen for at undgå API kald i controlleren
+            _context.ParkingEvents.Add(new ParkingEvent { LicensePlate = "AB12345" });
+            _context.SaveChanges();
+
+            // 5. Setup af forventede svar fra ParkingLot (så dine tests passer)
+            _mockParkingLot.Setup(x => x.EventTrigger(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<int>()))
+                           .Returns(98);
+
+            _mockParkingLot.Setup(x => x.GetAvailableSpaces())
+                           .Returns(99);
+
+            // 6. Instansier Controlleren med alle dependencies
+            _controller = new ParkWhereController(
+                _mockParkingLot.Object,
+                _mockHttpClientFactory.Object,
+                _carService,
+                _context
+            );
         }
 
         [TestMethod()]
@@ -44,7 +72,7 @@ namespace ParkWhereRest.Controllers.Tests
                 Time = DateTime.Now
             };
 
-            ActionResult<int> actionResult = _parkWhereController.ChangeParkingSpotAmount(plateDto);
+            Task<IActionResult> actionResult = _controller.ChangeParkingSpotAmount(plateDto);
 
             var result = actionResult.Result as OkObjectResult;
 
@@ -57,12 +85,11 @@ namespace ParkWhereRest.Controllers.Tests
         public void GetParkingSpots()
         {
             int expected = 99;
-            ActionResult<int> actual = _parkWhereController.GetAvailable();
-            
+            ActionResult<int> actual = _controller.GetAvailable();
+
             var actualResult = actual.Result as OkObjectResult;
 
             Assert.AreEqual(expected, actualResult.Value);
         }
-
     }
 }
