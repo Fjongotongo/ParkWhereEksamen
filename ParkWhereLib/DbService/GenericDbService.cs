@@ -4,6 +4,7 @@ using ParkWhereLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -43,13 +44,15 @@ namespace ParkWhereLib.DbService
             }
         }
 
-        public async Task GetObjectsAsync(Func<T, bool> predicate)
+        public async Task<IEnumerable<T>> GetObjectsAsync(Expression<Func<T, bool>> predicate)
         {
             using (var context = new MyDbContext(_options))
             {
-                var results = context.Set<T>().AsNoTracking().Where(predicate).ToList();
+                return await context.Set<T>()
+                    .AsNoTracking().Where(predicate).ToListAsync();
             }
         }
+
 
     }
 }
