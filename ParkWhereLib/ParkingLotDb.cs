@@ -88,5 +88,6 @@ namespace ParkWhereLib
             int currentlyParked = _context.ParkingEvents.Count(e => e.ExitTime == null);
             return ParkingSpaces - currentlyParked;
         }
+
     }
 }
