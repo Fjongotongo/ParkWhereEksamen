@@ -86,5 +86,20 @@ namespace ParkWhereRest.Controllers
             // Use the DB service
             return Ok(_parkingLot.GetAvailableSpaces());
         }
+
+        [HttpGet("GetAmountStartParkingEachHour")]
+        public ActionResult<IEnumerable<int>> GetAmountStartParkingEachHour()
+        {
+            // This calls the method you wrote in the first step
+            var data = _parkingLot.GetAmountStartParkingEachHour();
+            return Ok(data);
+        }
+
+        [HttpGet("GetAmountStartParkingEachDay")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<int>> GetAmountStartParkingEachDay()
+        {
+            return Ok(_parkingLot.GetAmountStartParkingEachDay());
+        }
     }
 }

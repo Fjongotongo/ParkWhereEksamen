@@ -7,5 +7,9 @@ namespace ParkWhereLib
         int EventTrigger(string licensePlate, DateTime time, int parkingLotId);
         int GetAvailableSpaces();
         int StartParkingEvent(string licensePlate, DateTime entryTime);
+
+        List<int> GetAmountStartParkingEachHour();
+
+        List<int> GetAmountStartParkingEachDay();
     }
 }
