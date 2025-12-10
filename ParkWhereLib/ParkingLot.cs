@@ -61,16 +61,15 @@ namespace ParkWhereLib
         public int GetAvailableSpaces() => ParkingSpaces - CarsParked;
 
         // In ParkingLot.cs
-        public List<int> GetAmountStartParkingEachHour()
+          public List<int> GetAmountStartParkingEachHour()
         {
-            // Return 24 zeros instead of null, so the chart simply shows flat lines
-            return Enumerable.Repeat(0, 24).ToList();
+            throw new NotImplementedException();
         }
-        // ParkingLot.cs
+
         public List<int> GetAmountStartParkingEachDay()
         {
-            // Return 7 zeros (Mon-Sun) to satisfy the interface
-            return Enumerable.Repeat(0, 7).ToList();
+            
+          throw new NotImplementedException();
         }
     }
 }

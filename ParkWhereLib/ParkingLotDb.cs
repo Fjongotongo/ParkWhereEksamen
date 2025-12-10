@@ -84,7 +84,6 @@ namespace ParkWhereLib
 
         public int GetAvailableSpaces()
         {
-            // Calculate directly from DB: Total Spaces - Count of cars currently parked (ExitTime is null)
             int currentlyParked = _context.ParkingEvents.Count(e => e.ExitTime == null);
             return ParkingSpaces - currentlyParked;
         }
@@ -92,59 +91,38 @@ namespace ParkWhereLib
 
         public List<int> GetAmountStartParkingEachHour()
         {
-            // Prepare a 24-item list (hours 0..23) initialized to 0
-            var countsByHour = Enumerable.Repeat(0, 24).ToList();
-
-            // 1. Calculate Start of Week (Monday)
-            DateTime now = DateTime.Now;
-
-            // This math ensures we go back to the most recent Monday (even if today is Sunday)
-            int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-            DateTime startOfWeek = now.Date.AddDays(-1 * diff);
-
-            // 2. Filter and Group
-            var groups = _context.ParkingEvents
-                // Optimization: Filter by date inside the database (before AsEnumerable)
-                .Where(e => e.EntryTime >= startOfWeek)
-                .AsEnumerable() // Switch to memory for the Hour grouping
-                .GroupBy(e => e.EntryTime.Hour)
-                .Select(g => new { Hour = g.Key, Count = g.Count() });
-
-            foreach (var g in groups)
-            {
-                if (g.Hour >= 0 && g.Hour < 24)
-                {
-                    countsByHour[g.Hour] = g.Count;
-                }
-            }
-
-            return countsByHour;
+            return GetWeeklyStats(24, date => date.Hour);
         }
 
         public List<int> GetAmountStartParkingEachDay()
         {
-            // Array for 7 days (0=Mon, 1=Tue ... 6=Sun)
-            var countsByDay = new int[7];
+            
+            return GetWeeklyStats(7, date => ((int)date.DayOfWeek + 6) % 7);
+        }
 
-            // Calculate Start of Week (Monday)
-            DateTime now = DateTime.Now;
-            int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-            DateTime startOfWeek = now.Date.AddDays(-1 * diff);
+        private List<int> GetWeeklyStats(int totalSlots, Func<DateTime, int> selector)
+        {
+            var startOfWeek = DateTime.Today.AddDays(-((int)DateTime.Today.DayOfWeek + 6) % 7);
 
-            var groups = _context.ParkingEvents
-                .Where(e => e.EntryTime >= startOfWeek) // Filter for this week
-                .AsEnumerable()
-                .GroupBy(e => e.EntryTime.DayOfWeek)
-                .Select(g => new { Day = g.Key, Count = g.Count() });
+            int[] finalCounts = new int[totalSlots];
 
-            foreach (var g in groups)
+            
+            var counts = _context.ParkingEvents
+                .Where(e => e.EntryTime >= startOfWeek)
+                .Select(e => e.EntryTime)
+                .AsEnumerable();
+
+            foreach (var date in counts)
             {
-                // Convert C# DayOfWeek (Sun=0, Mon=1) to Array Index (Mon=0, Sun=6)
-                int index = g.Day == DayOfWeek.Sunday ? 6 : (int)g.Day - 1;
-                countsByDay[index] = g.Count;
+                int index = selector(date);
+
+                if (index >= 0 && index < totalSlots)
+                {
+                    finalCounts[index]++;
+                }
             }
 
-            return countsByDay.ToList();
+            return finalCounts.ToList();
         }
 
 
