@@ -51,6 +51,8 @@ namespace ParkWhereLib
             return ParkingLotDb.ParkingSpaces - lot.CarsParked;
         }
 
+
+
         public int EndParkingEvent(string licensePlate, DateTime exitTime)
         {
 
@@ -82,6 +84,7 @@ namespace ParkWhereLib
             return ParkingLotDb.ParkingSpaces - lot.CarsParked;
         }
 
+    
         public int GetAvailableSpaces()
         {
             // Calculate directly from DB: Total Spaces - Count of cars currently parked (ExitTime is null)

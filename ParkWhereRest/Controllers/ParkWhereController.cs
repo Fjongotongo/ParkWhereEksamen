@@ -39,6 +39,20 @@ namespace ParkWhereRest.Controllers
             [JsonPropertyName("dateTime")]
             public DateTime Time { get; set; }
         }
+        public class CarDto
+        {
+            public int TotalCars { get; set; }
+            public Dictionary<string, BrandDto> Brands { get; set; }
+            public Dictionary<string, int> CarsByFueltype { get; set; }
+        }
+
+        public class BrandDto
+        {
+            public int Count { get; set; }
+            public Dictionary<string, int> Models { get; set; }
+        }
+
+
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -77,7 +91,35 @@ namespace ParkWhereRest.Controllers
             // Trigger parking lot event
             return Ok(_parkingLot.EventTrigger(dto.Plate, dto.Time, 1));
         }
-        
+
+        [HttpGet("stats")]
+        public async Task<ActionResult<CarDto>> GetCarStatistics()
+        {
+            var cars = await _carService.GetObjectsAsync();
+
+            var brands = cars
+                .GroupBy(c => c.Brand)
+                .ToDictionary(
+                    g => g.Key,
+                    g => new BrandDto
+                    {
+                        Count = g.Count(),
+                        Models = g.GroupBy(c => c.Model)
+                                  .ToDictionary(mg => mg.Key, mg => mg.Count())
+                    });
+
+            var stats = new CarDto
+            {
+                TotalCars = cars.Count(),
+                Brands = brands,
+                CarsByFueltype = cars.GroupBy(c => c.Fueltype)
+                                     .ToDictionary(fg => fg.Key, fg => fg.Count())
+            };
+
+            return Ok(stats);
+        }
+
+
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
