@@ -16,9 +16,8 @@ namespace ParkWhereLib
             _context = context;
         }
 
-
         // Logic to decide if we are starting or ending parking
-        public int EventTrigger(string licensePlate, DateTime time, int parkingLotId)
+        public int EventTrigger(string licensePlate, DateTime time)
         {
             // Check DB for an active parking event (ExitTime is null)
             if (_context.ParkingEvents.Any(e => e.LicensePlate == licensePlate && e.ExitTime == null))
@@ -34,10 +33,6 @@ namespace ParkWhereLib
             int parkingLotId = 1; // assume only one lot
 
             var lot = _context.ParkingLots.FirstOrDefault(l => l.ParkingLotId == parkingLotId);
-            if (lot == null)
-            {
-                throw new Exception("Parking lot does not exist");
-            }
 
             var parkingEvent = new ParkingEvent(licensePlate, entryTime, parkingLotId);
             _context.ParkingEvents.Add(parkingEvent);
@@ -58,13 +53,12 @@ namespace ParkWhereLib
 
             // 1. Get the parking lot
             var lot = _context.ParkingLots.FirstOrDefault(l => l.ParkingLotId == parkingLotId);
-            if (lot == null)
-            {
-                throw new Exception("Parking lot does not exist");
-            }
 
             // 2. Set the exit time for the parking event
             ParkingEvent? evt = _context.ParkingEvents.FirstOrDefault(e => e.LicensePlate == licensePlate && e.ExitTime == null);
+
+            if (evt == null) return GetAvailableSpaces();
+
             evt.ExitTime = exitTime;
             _context.ParkingEvents.Update(evt);
 
@@ -84,9 +78,8 @@ namespace ParkWhereLib
 
         public int GetAvailableSpaces()
         {
-            // Calculate directly from DB: Total Spaces - Count of cars currently parked (ExitTime is null)
-            int currentlyParked = _context.ParkingEvents.Count(e => e.ExitTime == null);
-            return ParkingSpaces - currentlyParked;
+            var lot = _context.ParkingLots.FirstOrDefault(l => l.ParkingLotId == 1);
+            return ParkingLotDb.ParkingSpaces - lot.CarsParked;
         }
 
     }
