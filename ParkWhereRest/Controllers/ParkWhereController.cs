@@ -85,13 +85,12 @@ namespace ParkWhereRest.Controllers
                 
             }
 
-
-
-
             // Trigger parking lot event
             return Ok(_parkingLot.EventTrigger(dto.Plate, dto.Time));
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet("stats")]
         public async Task<ActionResult<CarDto>> GetCarStatistics()
         {
