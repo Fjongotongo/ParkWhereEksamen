@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ParkWhereLib.Models; // Ensure namespace matches your file structure
+using ParkWhereLib.Models; 
 
 namespace ParkWhereLib.Models
 {
@@ -19,7 +19,6 @@ namespace ParkWhereLib.Models
         {
             OnModelCreatingPartial(modelBuilder);
 
-            // This tells EF Core: "If ID 1 doesn't exist, create it automatically."
             modelBuilder.Entity<ParkingLot>().HasData(
                 new ParkingLot { ParkingLotId = 1, CarsParked = 0 }
             );

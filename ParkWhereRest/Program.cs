@@ -24,7 +24,6 @@ builder.Services.AddHttpClient("MotorApi", client =>
     client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", motorApiConfig["ApiKey"]);
 });
 
-//builder.Services.AddSingleton<ParkingLot>();
 bool useSql = true;
 if (useSql)
 {
@@ -35,8 +34,8 @@ else
     builder.Services.AddSingleton<IParkingLot, ParkingLot>();
 }
 
-// 4. Register generic DB service
-builder.Services.AddScoped(typeof(GenericDbService<>)); // This allows injection for Car, ParkingEvent, etc.
+
+builder.Services.AddScoped(typeof(GenericDbService<>)); 
 
 
 builder.Services.AddScoped<ParkingLotDb>();

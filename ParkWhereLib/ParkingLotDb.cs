@@ -30,7 +30,7 @@ namespace ParkWhereLib
         public int StartParkingEvent(string licensePlate, DateTime entryTime)
         {
 
-            int parkingLotId = 1; // assume only one lot
+            int parkingLotId = 1; 
 
             var lot = _context.ParkingLots.FirstOrDefault(l => l.ParkingLotId == parkingLotId);
 
@@ -51,7 +51,7 @@ namespace ParkWhereLib
         public int EndParkingEvent(string licensePlate, DateTime exitTime)
         {
 
-            int parkingLotId = 1; // assume only one lot
+            int parkingLotId = 1; 
 
             // 1. Get the parking lot
             var lot = _context.ParkingLots.FirstOrDefault(l => l.ParkingLotId == parkingLotId);
