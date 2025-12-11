@@ -59,10 +59,5 @@ namespace ParkWhereLib
         }
 
         public int GetAvailableSpaces() => ParkingSpaces - CarsParked;
-
-        public List<int> GetAmountStartParkingEachHour()
-        {
-            return null;
-        }
     }
 }
