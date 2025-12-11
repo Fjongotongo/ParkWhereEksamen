@@ -49,7 +49,7 @@ namespace ParkWhereLib
             return ParkingSpaces - CarsParked;
         }
 
-        public int EventTrigger(string licensePlate, DateTime time, int parkingLotId)
+        public int EventTrigger(string licensePlate, DateTime time)
         {
             if (_events.Any(e => e.LicensePlate == licensePlate && e.ExitTime == null))
             {

@@ -54,7 +54,7 @@ namespace ParkWhereRest.Controllers.Tests
 
             // 3. Setup ParkingLot Mock
             _mockParkingLot = new Mock<IParkingLot>();
-            _mockParkingLot.Setup(x => x.EventTrigger(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<int>()))
+            _mockParkingLot.Setup(x => x.EventTrigger(It.IsAny<string>(), It.IsAny<DateTime>()))
                            .Returns(98);
             _mockParkingLot.Setup(x => x.GetAvailableSpaces())
                            .Returns(99);
