@@ -90,7 +90,6 @@ namespace ParkWhereRest.Controllers
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet("stats")]
         public async Task<ActionResult<CarDto>> GetCarStatistics()
         {
