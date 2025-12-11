@@ -13,10 +13,8 @@ namespace ParkWhereLib
         public DateTime EntryTime { get; set; }
         public DateTime? ExitTime { get; set; }
 
-        // Add this to satisfy the database
         public int ParkingLotId { get; set; }
 
-        // Constructor fix
         public ParkingEvent(string licensePlate, DateTime entryTime, int parkingLotId)
         {
             LicensePlate = licensePlate;

@@ -36,19 +36,18 @@ namespace ParkWhereRest.Controllers.Tests
             _context.ParkingEvents.Add(new ParkingEvent { LicensePlate = "AB12345" });
             _context.SaveChanges();
 
-            // 2. Setup af HttpClient (Simulerer din appsettings konfiguration)
+            // 2. Setup af HttpClient (Simulerer appsettings konfiguration)
             var client = new HttpClient();
 
             // Konfiguration ifølge https://v1.motorapi.dk/doc/
             client.BaseAddress = new Uri("https://v1.motorapi.dk/");
 
-            // --- OBS: INDSÆT DIN RIGTIGE NØGLE HERUNDER ---
             client.DefaultRequestHeaders.Add("X-Auth-Token", "mllr9po25fx4ylvtymlvwfoqxmxdh9rx");
 
             _mockHttpClientFactory = new Mock<IHttpClientFactory>();
 
             // Vi opsætter mocken til at reagere specifikt på navnet "MotorApi"
-            // ligesom i din controller: _httpClient = httpClientFactory.CreateClient("MotorApi");
+            // ligesom i controller: _httpClient = httpClientFactory.CreateClient("MotorApi");
             _mockHttpClientFactory.Setup(x => x.CreateClient("MotorApi"))
                                   .Returns(client);
 
@@ -71,7 +70,6 @@ namespace ParkWhereRest.Controllers.Tests
         [TestMethod()]
         public void ChangeParkingSpotAmountTest()
         {
-            // Eksisterende bil (AB12345) -> Ingen API kald
             int expected = 98;
             var plateDto = new ParkWhereController.PlateDto { Plate = "AB12345", Time = DateTime.Now };
 

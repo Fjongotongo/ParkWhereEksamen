@@ -35,7 +35,6 @@ namespace ParkWhereRest.Controllers
         {
             public string Plate { get; set; }
 
-            // Tells C# to look for "dateTime" in the JSON instead of "Time"
             [JsonPropertyName("dateTime")]
             public DateTime Time { get; set; }
         }
@@ -80,7 +79,7 @@ namespace ParkWhereRest.Controllers
                 var car = carsFromApi?.FirstOrDefault();
                 if (car != null)
                 {
-                    await _carService.AddObjectAsync(car); // Save locally
+                    await _carService.AddObjectAsync(car); 
                 }
                 
             }
@@ -123,7 +122,6 @@ namespace ParkWhereRest.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<int> GetAvailable()
         {
-            // Use the DB service
             return Ok(_parkingLot.GetAvailableSpaces());
         }
     }
