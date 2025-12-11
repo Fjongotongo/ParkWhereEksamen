@@ -89,7 +89,7 @@ namespace ParkWhereRest.Controllers
 
 
             // Trigger parking lot event
-            return Ok(_parkingLot.EventTrigger(dto.Plate, dto.Time, 1));
+            return Ok(_parkingLot.EventTrigger(dto.Plate, dto.Time));
         }
 
         [HttpGet("stats")]

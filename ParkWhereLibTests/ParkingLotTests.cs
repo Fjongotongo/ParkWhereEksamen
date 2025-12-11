@@ -32,9 +32,9 @@ namespace ParkWhereLib.Tests
                 ExitTime = null,
                 ParkingLotId = 1
             };
-            _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30), 1);
-            _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30), 1);
-            _parkingLot.EventTrigger("AB12346", DateTime.Now.AddMinutes(-30), 1);
+            _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30));
+            _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30));
+            _parkingLot.EventTrigger("AB12346", DateTime.Now.AddMinutes(-30));
         }
 
 
@@ -83,10 +83,10 @@ namespace ParkWhereLib.Tests
             DateTime entryTime = DateTime.Now.AddSeconds(-30);
             DateTime exitTime = DateTime.Now.AddSeconds(30);
 
-            _parkingLot.EventTrigger(licensePlate, entryTime, 1);
+            _parkingLot.EventTrigger(licensePlate, entryTime);
 
             int expected = 99;
-            int actual = _parkingLot.EventTrigger(licensePlate, exitTime, 1);
+            int actual = _parkingLot.EventTrigger(licensePlate, exitTime);
 
 
         }
@@ -100,7 +100,7 @@ namespace ParkWhereLib.Tests
             DateTime exitTime = DateTime.Now.AddSeconds(30);
 
             int expected = 97;
-            int actual = _parkingLot.EventTrigger(licensePlate, entryTime, 1);
+            int actual = _parkingLot.EventTrigger(licensePlate, entryTime);
 
             Assert.AreEqual(expected, actual);
         }
