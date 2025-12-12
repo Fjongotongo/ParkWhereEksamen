@@ -24,6 +24,8 @@ builder.Services.AddHttpClient("MotorApi", client =>
     client.DefaultRequestHeaders.Add("X-AUTH-TOKEN", motorApiConfig["ApiKey"]);
 });
 
+
+// Toggle between SQL and in-memory.
 bool useSql = true;
 if (useSql)
 {

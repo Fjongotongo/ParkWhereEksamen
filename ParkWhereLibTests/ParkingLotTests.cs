@@ -17,36 +17,30 @@ namespace ParkWhereLib.Tests
         private ParkingLot _parkingLot;
 
         [TestInitialize]
-       
         public void Setup()
         {
+            // 1 car is already parked.
             _parkingLot = new ParkingLot
             {
                 CarsParked = 1,
             };
 
-            ParkingEvent evt = new ParkingEvent
-            {
-                LicensePlate = "AB12345",
-                EntryTime = DateTime.Now.AddMinutes(-30),
-                ExitTime = null,
-                ParkingLotId = 1
-            };
+            // Add existing parking event to the list and ends again, then starts again so it checks for specifically 
             _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30));
             _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30));
-            _parkingLot.EventTrigger("AB12346", DateTime.Now.AddMinutes(-30));
+            _parkingLot.EventTrigger("AB12345", DateTime.Now.AddMinutes(-30));
         }
-
 
         [TestMethod()]
         public void Test_StartParkingEventReturnsUpdatedSpacesAfterNewParking()
         {
             string LicensePlate = "AB12345";
             DateTime EntryTime = DateTime.Now;
+
             int i = _parkingLot.StartParkingEvent(LicensePlate, EntryTime);
             ParkingEvent parkingevent = new ParkingEvent(LicensePlate, EntryTime, 1);
-            Assert.AreEqual(_parkingLot._events.First().LicensePlate, parkingevent.LicensePlate);
 
+            Assert.AreEqual(_parkingLot._events.First().LicensePlate, parkingevent.LicensePlate);
             Assert.AreEqual(i, 97);
         }
 
@@ -58,6 +52,7 @@ namespace ParkWhereLib.Tests
             DateTime exitTime = DateTime.Now.AddSeconds(30);
 
             int i = _parkingLot.StartParkingEvent(licensePlate, entryTime);
+            // If parking event is ended, available spaces should increase by 1, then we subtract 1 to assert are equal.
             int end = _parkingLot.EndParkingEvent(licensePlate, exitTime) - 1;
 
             Assert.AreEqual(i, end);
@@ -73,32 +68,34 @@ namespace ParkWhereLib.Tests
             int expcected = _parkingLot.GetAvailableSpaces();
             int actual = _parkingLot.EndParkingEvent(licensePlate, exitTime);
 
+            // If no parking event is found, available spaces should remain the same.
             Assert.AreEqual(expcected, actual);
         }
 
         [TestMethod()]
         public void Test_EventTriggerEndsParkingEvent()
         {
+            // Same license plate as in Setup, so it ends the parking event.
             string licensePlate = "AB12345";
             DateTime entryTime = DateTime.Now.AddSeconds(-30);
             DateTime exitTime = DateTime.Now.AddSeconds(30);
 
-            _parkingLot.EventTrigger(licensePlate, entryTime);
-
+            // Since license plate is in the list, and an active parking event with the numberplate exists, it ends it.
             int expected = 99;
             int actual = _parkingLot.EventTrigger(licensePlate, exitTime);
 
-
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod()]
         public void Test_EventTriggerStartsParkingEvent()
         {
 
-            string licensePlate = "AB12345";
+            string licensePlate = "plate";
             DateTime entryTime = DateTime.Now.AddSeconds(-30);
             DateTime exitTime = DateTime.Now.AddSeconds(30);
 
+            // Since license plate is not in the list, it starts a new parking event.
             int expected = 97;
             int actual = _parkingLot.EventTrigger(licensePlate, entryTime);
 
@@ -109,9 +106,10 @@ namespace ParkWhereLib.Tests
         public void Test_GetAvailableSpaces()
         {
             int expected = 98;
+
             int actual = _parkingLot.GetAvailableSpaces();
+
             Assert.AreEqual(expected, actual);
         }
-
     }
 }
