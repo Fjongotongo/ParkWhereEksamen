@@ -18,8 +18,6 @@ namespace ParkWhereLib.DbService
             _options = options;
         }
        
-
-
         public async Task<IEnumerable<T>> GetObjectsAsync()
         {
             using (var context = new MyDbContext(_options))
@@ -27,6 +25,7 @@ namespace ParkWhereLib.DbService
                 return await context.Set<T>().AsNoTracking().ToListAsync();
             }
         }
+
         public async Task AddObjectAsync(T obj)
         {
             using (var context = new MyDbContext(_options))
@@ -35,6 +34,7 @@ namespace ParkWhereLib.DbService
                 await context.SaveChangesAsync();
             }
         }
+        
         public async Task SaveObjects(List<T> objs)
         {
             using (var context = new MyDbContext(_options))
@@ -52,7 +52,5 @@ namespace ParkWhereLib.DbService
                     .AsNoTracking().Where(predicate).ToListAsync();
             }
         }
-
-
     }
 }

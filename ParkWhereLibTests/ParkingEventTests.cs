@@ -11,8 +11,6 @@ namespace ParkWhereLib.Tests
     [TestClass()]
     public class ParkingEventTests
     {
-        private ParkingEvent _parkingEvent;
-
         [TestMethod]
         public void Test_ShouldReturnNull_WhenExitTimeIsNull()
         {
@@ -54,8 +52,5 @@ namespace ParkWhereLib.Tests
             var licensePlate = parkingEvent.LicensePlate;
             Assert.AreEqual("ABC123", licensePlate);
         }
-
     }
-    
-    
 }
