@@ -24,7 +24,7 @@ namespace ParkWhereRest.Controllers.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            // 1. Setup In-Memory Database
+            //Setup In-Memory Database
             var options = new DbContextOptionsBuilder<MyDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
@@ -32,33 +32,31 @@ namespace ParkWhereRest.Controllers.Tests
             _context = new MyDbContext(options);
             _carService = new GenericDbService<Car>(options);
 
-            // Seed med eksisterende bil (AB12345) så den test ikke rammer API
+            // Seeding with existing car (AB12345) to make sure the Api wont reach it
             _context.ParkingEvents.Add(new ParkingEvent { LicensePlate = "AB12345" });
             _context.SaveChanges();
 
-            // 2. Setup af HttpClient (Simulerer appsettings konfiguration)
+            //Setting up HttpClient
             var client = new HttpClient();
 
-            // Konfiguration ifølge https://v1.motorapi.dk/doc/
+            // Configuration https://v1.motorapi.dk/doc/
             client.BaseAddress = new Uri("https://v1.motorapi.dk/");
 
             client.DefaultRequestHeaders.Add("X-Auth-Token", "mllr9po25fx4ylvtymlvwfoqxmxdh9rx");
 
             _mockHttpClientFactory = new Mock<IHttpClientFactory>();
 
-            // Vi opsætter mocken til at reagere specifikt på navnet "MotorApi"
-            // ligesom i controller: _httpClient = httpClientFactory.CreateClient("MotorApi");
+            // Setting up the mock to react specifically to the name "MotorApi"
             _mockHttpClientFactory.Setup(x => x.CreateClient("MotorApi"))
                                   .Returns(client);
 
-            // 3. Setup ParkingLot Mock
+            // Setup ParkingLot Mock
             _mockParkingLot = new Mock<IParkingLot>();
             _mockParkingLot.Setup(x => x.EventTrigger(It.IsAny<string>(), It.IsAny<DateTime>()))
                            .Returns(98);
             _mockParkingLot.Setup(x => x.GetAvailableSpaces())
                            .Returns(99);
 
-            // 4. Start Controlleren
             _controller = new ParkWhereController(
                 _mockParkingLot.Object,
                 _mockHttpClientFactory.Object,
@@ -67,6 +65,10 @@ namespace ParkWhereRest.Controllers.Tests
             );
         }
 
+        /// <summary>
+        /// Tests that the ParkWhereController.ChangeParkingSpotAmount method correctly updates the number
+        /// of available parking spots when provided with valid plate information.
+        /// </summary>
         [TestMethod()]
         public void ChangeParkingSpotAmountTest()
         {
@@ -80,8 +82,8 @@ namespace ParkWhereRest.Controllers.Tests
             Assert.AreEqual(expected, result.Value);
         }
 
-        //Denne test er udkommenteret da den bruger 1 API kald pr kørt test, dog virker den som den skal,
-        //så blot indkommenter og kør den hvis det skal vises.
+        //This test is outcommented because it uses an Api call everytime the test runs.
+        //It works as it should, remove it as comment if you want to test it
 
         //[TestMethod()]
         //public void ChangeParkingSpotAmountTests()
@@ -96,6 +98,11 @@ namespace ParkWhereRest.Controllers.Tests
         //    Assert.AreEqual(expected, result.Value);
         //}
 
+
+        /// <summary>
+        /// Tests whether the GetAvailable method of the controller returns the expected number of available
+        /// parking spots.
+        /// </summary>
         [TestMethod()]
         public void GetParkingSpots()
         {

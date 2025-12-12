@@ -20,10 +20,7 @@ namespace ParkWhereRest.Controllers
 
         private readonly MyDbContext _context;
 
-        public ParkWhereController(IParkingLot parkingLot,
-                                   IHttpClientFactory httpClientFactory,
-                                   GenericDbService<Car> carService,
-                                   MyDbContext context)
+        public ParkWhereController(IParkingLot parkingLot, IHttpClientFactory httpClientFactory, GenericDbService<Car> carService, MyDbContext context)
         {
             _parkingLot = parkingLot;
             _httpClient = httpClientFactory.CreateClient("MotorApi");
@@ -31,6 +28,9 @@ namespace ParkWhereRest.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Represents data for a vehicle license plate and the associated date and time.
+        /// </summary>
         public class PlateDto
         {
             public string Plate { get; set; }
@@ -38,6 +38,11 @@ namespace ParkWhereRest.Controllers
             [JsonPropertyName("dateTime")]
             public DateTime Time { get; set; }
         }
+
+        /// <summary>
+        /// Represents a data transfer object containing summary information about cars, including total count, brand
+        /// details, and distribution by fuel type.
+        /// </summary>
         public class CarDto
         {
             public int TotalCars { get; set; }
@@ -45,15 +50,19 @@ namespace ParkWhereRest.Controllers
             public Dictionary<string, int> CarsByFueltype { get; set; }
         }
 
+        /// <summary>
+        /// Represents brand information, including the total count and a collection of associated models with their
+        /// respective counts.
+        /// </summary>
         public class BrandDto
         {
             public int Count { get; set; }
             public Dictionary<string, int> Models { get; set; }
         }
 
-
-
-        [HttpPost]
+        /// <summary>
+        /// Updates the parking spot allocation for a vehicle based on the provided license plate information.
+        /// </summary>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeParkingSpotAmount([FromBody] PlateDto dto)
@@ -88,6 +97,10 @@ namespace ParkWhereRest.Controllers
             return Ok(_parkingLot.EventTrigger(dto.Plate, dto.Time));
         }
 
+        /// <summary>
+        /// Retrieves aggregated statistics about the available cars, including total count, brand distribution, and
+        /// fuel type breakdown.
+        /// </summary>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("stats")]
         public async Task<ActionResult<CarDto>> GetCarStatistics()
@@ -117,7 +130,9 @@ namespace ParkWhereRest.Controllers
         }
 
 
-
+        /// <summary>
+        /// Gets the number of available parking spaces in the parking lot.
+        /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<int> GetAvailable()
