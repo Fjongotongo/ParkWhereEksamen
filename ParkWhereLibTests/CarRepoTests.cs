@@ -16,6 +16,9 @@ namespace ParkWhereLib.Tests
         private CarRepo _carRepo;
         private MyDbContext _context;
 
+        /// <summary>
+        /// initializing the tests before setting them up
+        /// </summary>
         [TestInitialize]
         public void TestInitialize()
         {
@@ -35,6 +38,10 @@ namespace ParkWhereLib.Tests
             _context.SaveChanges();
         }
 
+        /// <summary>
+        /// Tests that a new car can be created and added to the repository with the expected properties
+        /// </summary>
+     
         [TestMethod()]
         public void CreateCarTest()
         {
@@ -49,29 +56,16 @@ namespace ParkWhereLib.Tests
 
             Car carAdded = _carRepo.AddCarToRepo(car);
 
+            Assert.IsNotNull(carAdded);
             Assert.AreEqual(expectedId, carAdded.Id);
             Assert.AreEqual(car.Brand, carAdded.Brand);
             Assert.AreEqual(car.Model, carAdded.Model);
             Assert.AreEqual(car.Fueltype, carAdded.Fueltype);
-        }
+        } 
 
-        [TestMethod()]
-        public void AddCarToRepoTest()
-        {
-            Car car = new Car
-            {
-                Brand = "Honda",
-                Model = "Civic",
-                Fueltype = "Diesel"
-            };
-            Car carAdded = _carRepo.AddCarToRepo(car);
-            Assert.IsNotNull(carAdded);
-            Assert.AreEqual(1, carAdded.Id);
-            Assert.AreEqual("Honda", carAdded.Brand);
-            Assert.AreEqual("Civic", carAdded.Model);
-            Assert.AreEqual("Diesel", carAdded.Fueltype);
-        }   
-
+        /// <summary>
+        /// Verifies that the car repository correctly stores and retrieves multiple car objects.
+        /// </summary>
         [TestMethod()] 
          public void GetCarsTest()
         {
@@ -95,6 +89,9 @@ namespace ParkWhereLib.Tests
             Assert.AreEqual("Honda", cars[1].Brand);
         }
 
+        /// <summary>
+        /// Verifies that the car object is correctly stored in the db and its possible to retrieve
+        /// </summary>
         public async Task GetCarsFromDbTest()
         {
             // Act
@@ -110,6 +107,10 @@ namespace ParkWhereLib.Tests
             Assert.AreEqual("Civic", cars[1].Model);
         }
 
+        /// <summary>
+        /// Verifies that adding a new car entity to the database context is successful
+        /// entity.
+        /// </summary>
         [TestMethod]
         public async Task AddCarToDbTest()
         {
