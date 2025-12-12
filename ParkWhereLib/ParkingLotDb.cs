@@ -16,7 +16,14 @@ namespace ParkWhereLib
             _context = context;
         }
 
-        // Logic to decide if we are starting or ending parking
+        /// <summary>
+        /// Method that triggers either start or end of a parking event based on the license plate and if exit time is null.
+        /// </summary>
+        /// <param name="licensePlate"></param>
+        /// <param name="time"></param>
+        /// <returns>
+        /// Returns the number of available parking spaces after the event has been triggered.
+        /// </returns>
         public int EventTrigger(string licensePlate, DateTime time)
         {
             // Check DB for an active parking event (ExitTime is null)
@@ -27,6 +34,15 @@ namespace ParkWhereLib
             return StartParkingEvent(licensePlate, time);
         }
 
+        /// <summary>
+        /// Method that created a new parking event when a car enters the parking lot.
+        /// There is only 1 parking lot, therefore parkingLotId is always 1, but we still find it with MyDbContext.
+        /// </summary>
+        /// <param name="licensePlate"></param>
+        /// <param name="entryTime"></param>
+        /// <returns>
+        /// Returns the number of available parking spaces after the car has entered.
+        /// </returns>
         public int StartParkingEvent(string licensePlate, DateTime entryTime)
         {
 
@@ -47,7 +63,16 @@ namespace ParkWhereLib
         }
 
 
-
+        /// <summary>
+        /// End the active parking event for a parking event with matching license plate and exit time is null.
+        /// There is only 1 parking lot, therefore parkingLotId is always 1, but we still find it with MyDbContext.
+        /// Only makes CarsParked-- if there is space for a car, so it doesn't go negative.
+        /// </summary>
+        /// <param name="licensePlate"></param>
+        /// <param name="exitTime"></param>
+        /// <returns>
+        /// Returns the number of available parking spaces after the car has exited.
+        /// </returns>
         public int EndParkingEvent(string licensePlate, DateTime exitTime)
         {
 
