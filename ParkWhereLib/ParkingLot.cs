@@ -23,6 +23,15 @@ namespace ParkWhereLib
 
         public ICollection<ParkingEvent> _events = new List<ParkingEvent>();
 
+
+        /// <summary>
+        /// Method that created a new parking event when a car enters the parking lot.
+        /// </summary>
+        /// <param name="licensePlate"></param>
+        /// <param name="entryTime"></param>
+        /// <returns>
+        /// Returns the number of available parking spaces after the car has entered.
+        /// </returns>
         public int StartParkingEvent(string licensePlate, DateTime entryTime)
         {
             ParkingEvent parkingEvent = new ParkingEvent(licensePlate, entryTime, 1);
@@ -37,6 +46,15 @@ namespace ParkWhereLib
             return ParkingSpaces - CarsParked;
         }
 
+
+        /// <summary>
+        /// End the active parking event for a parking event with matching license plate and exit time is null.
+        /// </summary>
+        /// <param name="licensePlate"></param>
+        /// <param name="exitTime"></param>
+        /// <returns>
+        /// Returns the number of available parking spaces after the car has exited.
+        /// </returns>
         public int EndParkingEvent(string licensePlate, DateTime exitTime)
         {
             ParkingEvent? evt = _events.FirstOrDefault(e => e.LicensePlate == licensePlate && e.ExitTime == null);
@@ -49,6 +67,15 @@ namespace ParkWhereLib
             return ParkingSpaces - CarsParked;
         }
 
+
+        /// <summary>
+        /// Method that triggers either start or end of a parking event based on the license plate and if exit time is null.
+        /// </summary>
+        /// <param name="licensePlate"></param>
+        /// <param name="time"></param>
+        /// <returns>
+        /// Returns the number of available parking spaces after the event has been triggered.
+        /// </returns>
         public int EventTrigger(string licensePlate, DateTime time)
         {
             if (_events.Any(e => e.LicensePlate == licensePlate && e.ExitTime == null))
